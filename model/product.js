@@ -2,12 +2,12 @@ const mongoose = require("mongoose")
 const { Schema, model } = mongoose
 
 const productSchema = new Schema({
-    owner: {
+    UserId: {
         type: Schema.Types.ObjectId,
         ref: "User",
         require: true
     },
-    price: {
+    priceTag: {
         type: Number,
         require: true
     },
@@ -22,4 +22,4 @@ const productSchema = new Schema({
 })
 
 const Product = model("product", productSchema)
-module.exports =  Product 
+module.exports = Product 
