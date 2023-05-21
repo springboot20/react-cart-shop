@@ -9,7 +9,7 @@ const auth = errorHandler((req, res, next) => {
         throw new HTTPError(401, "Unathorized")
 
     try {
-        const decodedToken = jwt.verify(token, "access-secret")
+        const decodedToken = jwt.verify(token, ACCESS_TOKEN_SECRET)
         req.user = decodedToken.userId
         next()
     } catch (error) {
