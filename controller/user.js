@@ -6,7 +6,7 @@ const bcrypt = require("bcryptjs");
 const generateRefreshToken = (userId, refreshId) => {
     const refreshToken = jwt.sign(
         { userId: userId, tokenId: refreshId },
-        REFRESH_TOKEN_SECRET,
+        process.env.REFRESH_TOKEN_SECRET,
         { expiresIn: "30d" },
     );
 
@@ -14,7 +14,7 @@ const generateRefreshToken = (userId, refreshId) => {
 };
 
 const generateAccessToken = (userId) => {
-    const accessToken = jwt.sign({ userId: userId }, ACCESS_TOKEN_SECRET, {
+    const accessToken = jwt.sign({ userId: userId }, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: "5m",
     });
 
@@ -24,7 +24,7 @@ const generateAccessToken = (userId) => {
 async function validateRefreshToken(token) {
     const decodeToken = () => {
         try {
-            return jwt.verify(token, REFRESF_TOKEN_SECRET);
+            return jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
         } catch (error) {
             return error.message;
         }
