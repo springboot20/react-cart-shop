@@ -1,22 +1,30 @@
 const jwt = require("jsonwebtoken");
-const { errorHandler, HTTPError } = require("../error");
+const model = require("../model/index.js");
+const { errorHandler } = require("../error/index.js");
 
-const auth = errorHandler((req, res, next) => {
-    const authHeader = req.header?.authorization
-    const token = authHeader && authHeader.split(" ")[1]
+const auth = errorHandler(async (req, res, next) => {
+    const accessToken = req.headers?.authorization.split(" ")[1]
 
-    if (!token)
-        throw new HTTPError(401, "Unathorized")
+    if (!accessToken) {
+        return res.status(401).json({ message: " Unauthorized: access token missing" })
+    }
 
     try {
-        const decodedToken = jwt.verify(token, ACCESS_TOKEN_SECRET)
-        req.user = decodedToken.userId
+        const decodedToken = jwt.verify(accessToken, "ACCESS_TOKEN_SECRET")
+        req.userId = decodedToken.userId
+
+        const user = await model.User.findById(decodedToken.userId)
+
+        if (!user) {
+            return res.status(401).json({ message: " Unauthorized: invalid access token" })
+        }
+
+        res.setHeader("Authorization", `Bearer ${accessToken}`)
         next()
     } catch (error) {
-        throw new HTTPError(401, "Unauthorized")
+        return res.status(401).json({ message: " Unauthorized: access token invalid or expired" })
     }
 })
 
-module.exports = {
-    auth
-}
+module.exports = { auth };
+

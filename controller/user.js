@@ -6,7 +6,7 @@ const bcrypt = require("bcryptjs");
 const generateRefreshToken = (userId, refreshId) => {
     const refreshToken = jwt.sign(
         { userId: userId, tokenId: refreshId },
-        process.env.REFRESH_TOKEN_SECRET,
+        "REFRESH_TOKEN_SECRET",
         { expiresIn: "30d" },
     );
 
@@ -14,7 +14,7 @@ const generateRefreshToken = (userId, refreshId) => {
 };
 
 const generateAccessToken = (userId) => {
-    const accessToken = jwt.sign({ userId: userId }, process.env.ACCESS_TOKEN_SECRET, {
+    const accessToken = jwt.sign({ userId: userId }, "ACCESS_TOKEN_SECRET", {
         expiresIn: "5m",
     });
 
@@ -24,7 +24,7 @@ const generateAccessToken = (userId) => {
 async function validateRefreshToken(token) {
     const decodeToken = () => {
         try {
-            return jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+            return jwt.verify(token, "REFRESH_TOKEN_SECRET");
         } catch (error) {
             return error.message;
         }
@@ -143,9 +143,14 @@ const signIn = errorHandler(
     })
 );
 
+const logOut = errorHandler(withTransactions(async (req, res, session) => {
+
+}))
+
 const me = errorHandler(async (req, res) => {
-    const userDoc = await model.User.findById(req.userId)
-    if (!userDoc) throw new HTTPError(400, " User not found")
+    const userDoc = await model.User.findById(req.userId).exec()
+    if (!userDoc) { throw new HTTPError(400, " User not found") }
+
     return userDoc
 })
 module.exports = {
@@ -153,5 +158,5 @@ module.exports = {
     signUp,
     newRefreshToken,
     newAccessToken,
-    me
+    me, logOut
 };

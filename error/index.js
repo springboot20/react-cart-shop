@@ -11,20 +11,21 @@ class HTTPError extends Error {
 function errorHandler(fn) {
     return async function (req, res, next) {
         try {
-            const nextCalled = false
+            let nextCalled = false;
             let result = await fn(req, res, (params) => {
-                nextCalled = true
-                next(params)
+                nextCalled = true;
+                next(params);
             });
 
-            if (!res.headerSent || nextCalled) {
-                res.json(result)
+            if (!res.headersSent && !nextCalled) {
+                res.json(result);
             }
         } catch (error) {
-            next(error)
+            next(error);
         }
-    }
+    };
 }
+
 
 function withTransactions(fn) {
     return async function (req, res, next) {

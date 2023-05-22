@@ -40,22 +40,22 @@ app.get('/', (req, res, next) => {
     res.send("Hello world from home page");
 })
 
-// app.use((req, res, next) => {
-//     const err = new Error("Not found");
-//     err.status = 404;
-//     next(err);
-// });
+app.use((req, res, next) => {
+    const err = new Error("Not found");
+    err.status = 404;
+    next(err);
+});
 
-// app.use((err, req, res, next) => {
-//     res.status(err.status || 500);
-//     res.send({
-//         error: {
-//             status: err.status || 500,
-//             message: err.message,
-//         },
-//     });
-//     next(err);
-// });
+app.use((err, req, res, next) => {
+    res.status(err.status || 500);
+    res.send({
+        error: {
+            status: err.status || 500,
+            message: err.message,
+        },
+    });
+    next(err);
+});
 
 app.listen(process.env.PORT || 5000, () => {
     console.log(`Server running at http://localhost:${process.env.PORT}`)
