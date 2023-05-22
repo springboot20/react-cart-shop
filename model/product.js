@@ -22,7 +22,7 @@ const productSchema = new Schema({
     createdBy: {
         type: mongoose.Types.ObjectId
     }
-})
+}, { timestamps: true })
 
 const Product = model("product", productSchema)
 module.exports = Product 
