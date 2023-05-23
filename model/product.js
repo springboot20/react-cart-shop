@@ -7,6 +7,10 @@ const productSchema = new Schema({
         ref: "User",
         require: true
     },
+    imageUrl: {
+        type: String,
+        require: [true, "Image url is required"]
+    },
     priceTag: {
         type: Number,
         require: true
@@ -14,6 +18,10 @@ const productSchema = new Schema({
     product_name: {
         type: String,
         require: true
+    },
+    description: {
+        type: String,
+        require: [true, "Description is required"]
     },
     createdAt: {
         type: Date,
