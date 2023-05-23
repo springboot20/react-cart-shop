@@ -26,7 +26,7 @@ async function validateRefreshToken(token) {
         try {
             return jwt.verify(token, "REFRESH_TOKEN_SECRET");
         } catch (error) {
-            return error.message;
+            throw new HTTPError(401, "Unauthorized");
         }
     };
 
@@ -37,7 +37,7 @@ async function validateRefreshToken(token) {
     if (tokenExist) {
         return decodedToken;
     } else {
-        return new HTTPError(401, "Unauthorized");
+        throw new HTTPError(401, "Unauthorized");
     }
 }
 
@@ -50,10 +50,10 @@ const newRefreshToken = errorHandler(
         const refreshTokenDoc = new model.RefreshToken({
             userId: currentRefreshToken.userId,
         });
-
+ 
         await refreshTokenDoc.save({ session });
-        await model.RefreshToken.deleteOne({ id: currentRefreshToken.tokenId });
-
+        await model.RefreshToken.deleteOne({ _id: currentRefreshToken.tokenId }, { session });
+        console.log(currentRefreshToken)
         const refreshToken = generateRefreshToken(
             currentRefreshToken.userId,
             refreshTokenDoc.id,
@@ -64,18 +64,16 @@ const newRefreshToken = errorHandler(
     }),
 );
 
-const newAccessToken = errorHandler(
-    withTransactions(async (req, res, session) => {
-        const refreshToken = await validateRefreshToken(req.body.refreshToken);
-        const accessToken = generateAccessToken(refreshToken.userId);
+const newAccessToken = errorHandler(async (req, res, session) => {
+    const refreshToken = await validateRefreshToken(req.body.refreshToken);
+    const accessToken = generateAccessToken(refreshToken.userId);
 
-        return {
-            id: refreshToken.userId,
-            accessToken,
-            refreshToken: req.body.refreshToken,
-        };
-    }),
-);
+    return {
+        id: refreshToken.userId,
+        accessToken,
+        refreshToken: req.body.refreshToken,
+    };
+});
 
 const signUp = errorHandler(
     withTransactions(async (req, res, session) => {
@@ -144,7 +142,11 @@ const signIn = errorHandler(
 );
 
 const logOut = errorHandler(withTransactions(async (req, res, session) => {
+    const refreshToken = await validateRefreshToken(req.body.refreshToken);
 
+    await model.RefreshToken.deleteOne({ _id: refreshToken.tokenId }, { session });
+
+    return { message: "Logged out successfully" }
 }))
 
 const me = errorHandler(async (req, res) => {
