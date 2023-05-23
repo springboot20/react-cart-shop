@@ -7,7 +7,7 @@ router.get('/', (req, res, next) => {
     res.send("Hello world from products page")
 })
 
-router.post('/createproduct', createProduct)
+router.post('/create-product', createProduct)
 router.get('/all-products', getAllProducts)
 router.patch('/:id', updateProduct)
 router.delete('/:id', deleteProduct)
