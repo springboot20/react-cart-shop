@@ -10,7 +10,7 @@ const auth = errorHandler(async (req, res, next) => {
     }
 
     try {
-        const decodedToken = jwt.verify(accessToken, "ACCESS_TOKEN_SECRET")
+        const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET)
         req.userId = decodedToken.userId
 
         const user = await model.User.findById(decodedToken.userId)
