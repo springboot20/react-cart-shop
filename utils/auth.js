@@ -1,6 +1,6 @@
-const jwt = require("jsonwebtoken");
-const model = require("../model/index.js");
 const { errorHandler } = require("../error/index.js");
+const model = require("../model/index.js");
+const jwt = require("jsonwebtoken");
 
 const auth = errorHandler(async (req, res, next) => {
     const accessToken = req.headers?.authorization.split(" ")[1]
