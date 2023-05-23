@@ -2,7 +2,7 @@ const mongoose = require("mongoose")
 const { Schema, model } = mongoose
 
 const productSchema = new Schema({
-    UserId: {
+    userId: {
         type: Schema.Types.ObjectId,
         ref: "User",
         require: true
