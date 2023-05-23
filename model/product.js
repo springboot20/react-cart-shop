@@ -15,7 +15,7 @@ const productSchema = new Schema({
         type: Number,
         require: true
     },
-    product_name: {
+    productName: {
         type: String,
         require: true
     },
