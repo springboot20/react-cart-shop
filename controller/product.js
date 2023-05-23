@@ -12,46 +12,50 @@ const createProduct = errorHandler(withTransactions(async (req, res, session) =>
     }
 }))
 
-const getAllProducts = errorHandler(withTransactions(async (req, res, session) => {
-    console.log(req.userId)
+const getAllProducts = errorHandler(async (req, res, next) => {
     const products = await model.Product.find({ createdBy: req.userId }).sort("createdAt")
 
     return {
         products
     }
-}))
+})
 
-const getProduct = errorHandler(withTransactions(async (req, res, session) => {
-    const { userId, params: { productId } } = req
+const getProduct = errorHandler(async (req, res, next) => {
+    const { userId, params: { id: productId } } = req
+
+    console.log(userId, productId)
 
     const productDoc = await model.Product.findOne({
         _id: productId,
         createdBy: userId
     })
+    console.log(productDoc)
 
     return {
         productDoc
     }
-}))
+})
 
-const updateProduct = errorHandler(withTransactions(async (req, res, session) => {
-    const { userId, params: { productId } } = req
+const updateProduct = errorHandler(async (req, res, next) => {
+    const { userId, params: { id: productId } } = req
+
 
     const productDoc = await model.Product.findOneAndUpdate(
         {
             _id: productId,
             createdBy: userId
         },
-        ...req.body,
+        req.body,
         { new: true }
     )
+
 
     return {
         productDoc
     }
-}))
+})
 
-const deleteProduct = errorHandler(withTransactions(async (req, res, session) => {
+const deleteProduct = errorHandler(async (req, res, next) => {
     const { params: { productId } } = req
 
     const productDoc = await model.Product.findOneAndDelete({
@@ -61,7 +65,7 @@ const deleteProduct = errorHandler(withTransactions(async (req, res, session) =>
     return {
         productDoc
     }
-}))
+})
 
 module.exports = {
     createProduct,

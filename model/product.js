@@ -20,7 +20,9 @@ const productSchema = new Schema({
         default: Date.now()
     },
     createdBy: {
-        type: mongoose.Types.ObjectId
+        type: mongoose.Types.ObjectId,
+        ref: "User",
+        require: [true, "User is required"]
     }
 }, { timestamps: true })
 
