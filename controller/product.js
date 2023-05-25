@@ -1,4 +1,4 @@
-const { errorHandler, HTTPError, withTransactions } = require("../error")
+const { errorHandler, withTransactions } = require("../error")
 const model = require("../model/index.js")
 
 const createProduct = errorHandler(withTransactions(async (req, res, session) => {
