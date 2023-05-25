@@ -15,10 +15,13 @@ mongoose.connect(process.env.MONGODB_URI, {
     user: process.env.USER,
     pass: process.env.PASS
 }).then(() => {
-    console.log("Mongogb database connected successfully....")
+    console.log("MongoDb database connected successfully....")
 })
 
 mongoose.connection.on("connect", () => {
+    app.listen(process.env.PORT || 5000, () => {
+        console.log(`Server running at http://localhost:${process.env.PORT}`)
+    })
     console.log("Mongodb connected ....")
 })
 
@@ -59,6 +62,3 @@ app.use((err, req, res, next) => {
     next(err);
 });
 
-app.listen(process.env.PORT || 5000, () => {
-    console.log(`Server running at http://localhost:${process.env.PORT}`)
-})

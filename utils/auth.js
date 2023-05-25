@@ -6,7 +6,7 @@ const auth = errorHandler(async (req, res, next) => {
     const accessToken = req.headers?.authorization.split(" ")[1]
 
     if (!accessToken) {
-        return res.status(401).json({ message: " Unauthorized: access token missing" })
+        return res.status(401).json({ message: "Unauthorized: access token missing" })
     }
 
     try {
