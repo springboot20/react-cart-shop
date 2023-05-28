@@ -25,7 +25,8 @@ const productSchema = new Schema({
     },
     type: {
         type: String,
-        enum :[]
+        enum: ["men", "women", "watch", "laptop"],
+        required: true
     },
     createdAt: {
         type: Date,
