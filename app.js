@@ -32,14 +32,17 @@ process.on("SIGINT", () => {
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-app.use(cors())
+app.use(cors({ origin: "*" }))
 
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/products', auth, productRouter)
 
 app.get('/', (req, res, next) => {
     res.header("Access-Control-Allow-Headers", "*");
+    res.header("Content-Range", "users 0-90/90")
     res.send("Hello world from home page");
+
+    next()
 })
 
 app.use((req, res, next) => {

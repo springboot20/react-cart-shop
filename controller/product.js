@@ -7,17 +7,13 @@ const createProduct = errorHandler(withTransactions(async (req, res, session) =>
     const productDocs = new model.Product({ ...req.body })
     await productDocs.save({ session })
 
-    return {
-        productDocs
-    }
+    return productDocs
 }))
 
 const getAllProducts = errorHandler(async (req, res, next) => {
     const products = await model.Product.find({ createdBy: req.userId }).sort("createdAt")
 
-    return {
-        products
-    }
+    return products
 })
 
 const getProduct = errorHandler(async (req, res, next) => {
@@ -31,9 +27,7 @@ const getProduct = errorHandler(async (req, res, next) => {
     })
     console.log(productDoc)
 
-    return {
-        productDoc
-    }
+    return productDoc
 })
 
 const updateProduct = errorHandler(async (req, res, next) => {
@@ -50,9 +44,8 @@ const updateProduct = errorHandler(async (req, res, next) => {
     )
 
 
-    return {
-        productDoc
-    }
+    return productDoc
+
 })
 
 const deleteProduct = errorHandler(async (req, res, next) => {
@@ -62,9 +55,7 @@ const deleteProduct = errorHandler(async (req, res, next) => {
         _id: productId,
     })
 
-    return {
-        productDoc
-    }
+    return productDoc
 })
 
 module.exports = {

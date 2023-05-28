@@ -23,6 +23,10 @@ const productSchema = new Schema({
         type: String,
         require: [true, "Description is required"]
     },
+    type: {
+        type: String,
+        enum :[]
+    },
     createdAt: {
         type: Date,
         default: Date.now()
