@@ -7,6 +7,9 @@ const productSchema = new Schema({
         ref: "User",
         require: true
     },
+    id: {
+        type: String,
+    },
     imageUrl: {
         type: String,
         require: [true, "Image url is required"]
@@ -25,8 +28,8 @@ const productSchema = new Schema({
     },
     type: {
         type: String,
-        enum: ["men", "women", "watch", "laptop"],
-        default: "men",
+        enum: ["trouser", "shirt", "watch", "laptop", "sun glass", "snickers", "underwear"],
+        default: "shirt",
         required: true
     },
     createdAt: {

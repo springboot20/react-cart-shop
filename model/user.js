@@ -2,26 +2,26 @@ const mongoose = require("mongoose")
 const { Schema, model } = mongoose
 
 const userSchema = new Schema({
-    firstname: {
+    first_name: {
         type: String,
-        require: true
+        require: [true, "first_name is required"]
     },
-    lastname: {
+    last_name: {
         type: String,
-        require: true
+        require: [true, "last_name is required"]
     },
     email: {
         type: String,
-        require: true,
+        require: [true, "email is required"],
         unique: true
     },
     password: {
         type: String,
-        require: true
+        require: [true, "password is required"]
     },
     avatar: {
         type: String,
-        require: true
+        require: [true, "avatar is required"]
     }
 })
 
