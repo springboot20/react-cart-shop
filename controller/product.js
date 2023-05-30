@@ -41,18 +41,18 @@ const getProductsByType = errorHandler(async (req, res, next) => {
     return productDoc
 })
 
-const updateProduct = errorHandler(async (req, res, next) => {
+const updateProduct = errorHandler(withTransactions(async (req, res, session) => {
     const { userId, params: { id: productId } } = req
-
 
     const productDoc = await model.Product.findOneAndUpdate({
         _id: productId,
         createdBy: userId
     }, req.body, { new: true })
 
+    await productDoc.save({ session })
     return productDoc
 
-})
+}))
 
 const deleteProduct = errorHandler(async (req, res, next) => {
     const { params: { id: productId } } = req
