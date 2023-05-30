@@ -91,6 +91,7 @@ const signUp = errorHandler(
             email,
             password: hashedPassword,
             username,
+            avatar
         });
 
         const refreshDoc = new model.RefreshToken({
