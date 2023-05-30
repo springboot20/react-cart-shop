@@ -8,6 +8,14 @@ const getOrders = errorHandler(async (req, res, next) => {
     return orderDoc
 })
 
+const getOrder = errorHandler(async (req, res, next) => {
+    const { userId, params: { orderId } } = req
+
+    const orderDoc = await model.Order.findOne({ _id: orderId, orderBy: userId })
+
+    return orderDoc
+})
+
 const makeOrder = errorHandler(withTransactions(async (req, res, session) => {
     req.body.orderBy = req.userId
 
@@ -31,8 +39,17 @@ const updateOrder = errorHandler(withTransactions(async (req, res, session) => {
     return orderDoc
 }))
 
+const deleteOrder = errorHandler(async (req, res, next) => {
+    const { params: { orderId } } = req
+
+    const orderDoc = await model.Order.findOneAndDelete({ _id: orderId, orderBy: userId })
+    return orderDoc
+})
+
 module.exports = {
     makeOrder,
     getOrders,
-    updateOrder
+    getOrder,
+    updateOrder,
+    deleteOrder
 }
