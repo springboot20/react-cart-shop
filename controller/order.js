@@ -18,7 +18,21 @@ const makeOrder = errorHandler(withTransactions(async (req, res, session) => {
     return orderDoc
 }))
 
+const updateOrder = errorHandler(withTransactions(async (req, res, session) => {
+    const { userId, params: { id: orderId } } = req
+
+    const orderDoc = await model.Order.findOneAndUpdate({
+        _id: orderId,
+        orderBy: userId
+    }, req.body, { new: true })
+
+    await orderDoc.save({ session })
+
+    return orderDoc
+}))
+
 module.exports = {
     makeOrder,
-    getOrders
+    getOrders,
+    updateOrder
 }

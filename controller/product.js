@@ -34,14 +34,10 @@ const updateProduct = errorHandler(async (req, res, next) => {
     const { userId, params: { id: productId } } = req
 
 
-    const productDoc = await model.Product.findOneAndUpdate(
-        {
-            _id: productId,
-            createdBy: userId
-        },
-        req.body,
-        { new: true }
-    )
+    const productDoc = await model.Product.findOneAndUpdate({
+        _id: productId,
+        createdBy: userId
+    }, req.body, { new: true })
 
 
     return productDoc
