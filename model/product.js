@@ -26,7 +26,7 @@ const productSchema = new Schema({
         type: String,
         require: [true, "Description is required"]
     },
-    type: {
+    productType: {
         type: String,
         enum: ["trouser", "shirt", "watch", "laptop", "sun glass", "snickers", "underwear"],
         default: "shirt",

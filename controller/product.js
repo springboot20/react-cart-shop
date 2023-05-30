@@ -30,6 +30,17 @@ const getProduct = errorHandler(async (req, res, next) => {
     return productDoc
 })
 
+const getProductsByType = errorHandler(async (req, res, next) => {
+    const { userId, params: { type: productType } } = req
+
+    const productDoc = await model.Product.find({
+        productType: productType,
+        createdBy: userId
+    })
+
+    return productDoc
+})
+
 const updateProduct = errorHandler(async (req, res, next) => {
     const { userId, params: { id: productId } } = req
 
@@ -38,7 +49,6 @@ const updateProduct = errorHandler(async (req, res, next) => {
         _id: productId,
         createdBy: userId
     }, req.body, { new: true })
-
 
     return productDoc
 
@@ -58,6 +68,7 @@ module.exports = {
     createProduct,
     getAllProducts,
     getProduct,
+    getProductsByType,
     updateProduct,
     deleteProduct
 }
