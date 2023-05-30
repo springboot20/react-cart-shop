@@ -19,6 +19,10 @@ const userSchema = new Schema({
         type: String,
         require: [true, "password is required"]
     },
+    username: {
+        type: String,
+        unique: true
+    },
     avatar: {
         type: String,
         require: [true, "avatar is required"]

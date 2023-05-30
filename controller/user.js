@@ -77,7 +77,8 @@ const newAccessToken = errorHandler(async (req, res, session) => {
 
 const signUp = errorHandler(
     withTransactions(async (req, res, session) => {
-        const { firstname, lastname, email, password } = req.body;
+        const { first_name, last_name, email, password, username } = req.body;
+
         const existingUser = await model.User.findOne({ email });
 
         if (existingUser) throw new HTTPError(409, "User already exists....");
@@ -85,10 +86,11 @@ const signUp = errorHandler(
         const hashedPassword = await bcrypt.hash(password, 12);
 
         const userDoc = new model.User({
-            firstname,
-            lastname,
+            first_name,
+            last_name,
             email,
             password: hashedPassword,
+            username,
         });
 
         const refreshDoc = new model.RefreshToken({
