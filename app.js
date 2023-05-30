@@ -6,6 +6,7 @@ const mongoose = require("mongoose")
 const bodyParser = require("body-parser")
 const userRouter = require("./routes/user")
 const productRouter = require("./routes/product")
+const orderRouter = require("./routes/order")
 const { auth } = require("./utils/auth")
 
 const app = express()
@@ -36,6 +37,7 @@ app.use(cors({ origin: "*" }))
 
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/products', auth, productRouter)
+app.use('/api/v1/orders', auth, orderRouter)
 
 app.get('/', (req, res, next) => {
     res.header("Access-Control-Allow-Headers", "*");

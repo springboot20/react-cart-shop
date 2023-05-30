@@ -1,6 +1,13 @@
 const { errorHandler, withTransactions } = require("../error")
 const model = require("../model/index.js")
 
+
+const getOrders = errorHandler(async (req, res, next) => {
+    const orderDoc = await model.Order.find({ orderBy: req.userId }).sort("orderAt")
+
+    return orderDoc
+})
+
 const makeOrder = errorHandler(withTransactions(async (req, res, session) => {
     req.body.orderBy = req.userId
 
@@ -12,5 +19,6 @@ const makeOrder = errorHandler(withTransactions(async (req, res, session) => {
 }))
 
 module.exports = {
-    makeOrder
+    makeOrder,
+    getOrders
 }
