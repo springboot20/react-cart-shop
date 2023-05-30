@@ -42,7 +42,7 @@ const updateOrder = errorHandler(withTransactions(async (req, res, session) => {
 const deleteOrder = errorHandler(async (req, res, next) => {
     const { params: { id: orderId } } = req
 
-    const orderDoc = await model.Order.findOneAndDelete({ _id: orderId, orderBy: userId })
+    const orderDoc = await model.Order.findOneAndDelete({ _id: orderId })
     return orderDoc
 })
 
