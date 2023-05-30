@@ -77,7 +77,7 @@ const newAccessToken = errorHandler(async (req, res, session) => {
 
 const signUp = errorHandler(
     withTransactions(async (req, res, session) => {
-        const { first_name, last_name, email, password, username } = req.body;
+        const { first_name, last_name, email, password, username, avatar } = req.body;
 
         const existingUser = await model.User.findOne({ email });
 
