@@ -4,7 +4,7 @@ const model = require("../model/index.js")
 const createProduct = errorHandler(withTransactions(async (req, res, session) => {
     req.body.createdBy = req.userId
 
-    const productDocs = new model.Product({ ...req.body })
+    const productDocs = new model.Product({ ...req.body, id: new Date().toString(2) + new Date().getUTCMilliseconds() })
     await productDocs.save({ session })
 
     return productDocs
