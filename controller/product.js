@@ -12,22 +12,8 @@ const createProduct = errorHandler(withTransactions(async (req, res, session) =>
 
 const getAllProducts = errorHandler(async (req, res, next) => {
     const products = await model.Product.find({ createdBy: req.userId }).sort("createdAt")
-
+    console.log(req.userId)
     return products
-})
-
-const getProduct = errorHandler(async (req, res, next) => {
-    const { userId, params: { id: productId } } = req
-
-    console.log(userId, productId)
-
-    const productDoc = await model.Product.findOne({
-        _id: productId,
-        createdBy: userId
-    })
-    console.log(productDoc)
-
-    return productDoc
 })
 
 const getProductsByType = errorHandler(async (req, res, next) => {
@@ -61,6 +47,18 @@ const deleteProduct = errorHandler(async (req, res, next) => {
         _id: productId,
     })
 
+    return productDoc
+})
+
+const getProduct = errorHandler(async (req, res, next) => {
+    const { userId, params: { id: productId } } = req
+
+    const productDoc = await model.Product.findOne({
+        _id: productId,
+        createdBy: userId
+    })
+
+    console.log(req.userId)
     return productDoc
 })
 
