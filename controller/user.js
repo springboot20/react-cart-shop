@@ -172,11 +172,18 @@ const usersCount = errorHandler(async (req, res, next) => {
     return userDoc
 })
 
+const getAllUsers = errorHandler(async (req, res, next) => {
+    const userDoc = await model.User.find({})
+
+    return userDoc
+})
+
 module.exports = {
     signIn,
     signUp,
     newRefreshToken,
     newAccessToken,
     me, logOut,
-    usersCount
+    usersCount,
+    getAllUsers
 };
