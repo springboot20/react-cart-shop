@@ -2,6 +2,8 @@ const jwt = require("jsonwebtoken");
 const { HTTPError, withTransactions, errorHandler } = require("../error/index");
 const model = require("../model/index");
 const bcrypt = require("bcryptjs");
+const multer = require("multer")
+
 
 const generateRefreshToken = (userId, refreshId) => {
     const refreshToken = jwt.sign(
@@ -77,11 +79,13 @@ const newAccessToken = errorHandler(async (req, res, session) => {
 
 const signUp = errorHandler(
     withTransactions(async (req, res, session) => {
-        const { first_name, last_name, email, password, username, avatar } = req.body;
+        const { first_name, last_name, email, password } = req.body;
+        const { filename, path, originalname } = req.file
 
         const existingUser = await model.User.findOne({ email });
 
         if (existingUser) throw new HTTPError(409, "User already exists....");
+        if (!req.file) throw new HTTPError(400, "No profile photo recieved")
 
         const hashedPassword = await bcrypt.hash(password, 12);
 
@@ -90,8 +94,11 @@ const signUp = errorHandler(
             last_name,
             email,
             password: hashedPassword,
-            username,
-            avatar
+            profilePhoto: {
+                filename,
+                path,
+                originalname
+            }
         });
 
         const refreshDoc = new model.RefreshToken({

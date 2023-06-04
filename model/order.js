@@ -3,40 +3,29 @@ const { Schema, model } = require("mongoose")
 const orderSchema = new Schema({
     id: {
         type: String
-    },
-    userId: {
+    }, userId: {
         type: Schema.Types.ObjectId,
         ref: "User",
-    },
-    first_name: {
+    }, first_name: {
         type: String,
         required: [true, "first_name is required"]
-    },
-    last_name: {
+    }, last_name: {
         type: String,
         required: [true, "last_name is required"]
-    },
-    username: {
+    }, username: {
         type: String,
         required: [true, "username is required"]
-    },
-    email: {
+    }, email: {
         type: String,
         required: [true, "email is required"],
         unique: true
-    },
-    address_one: {
+    }, address: {
         type: String,
         required: [true, "address is required"]
-    },
-    address_two: {
-        type: String
-    },
-    orderAt: {
+    }, orderAt: {
         type: Date,
         default: Date.now()
-    },
-    orderBy: {
+    }, orderBy: {
         type: Schema.Types.ObjectId,
         ref: "User",
         required: [true, "user is required"]

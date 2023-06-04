@@ -5,29 +5,25 @@ const userSchema = new Schema({
     first_name: {
         type: String,
         require: [true, "first_name is required"]
-    },
-    last_name: {
+    }, last_name: {
         type: String,
         require: [true, "last_name is required"]
-    },
-    email: {
+    }, email: {
         type: String,
         require: [true, "email is required"],
         unique: true
-    },
-    password: {
+    }, password: {
         type: String,
         require: [true, "password is required"]
-    },
-    username: {
-        type: String,
-        unique: true
-    },
-    avatar: {
-        type: String,
-        require: [true, "avatar is required"]
+    }, profilePhoto: {
+        filename: String,
+        path: String,
+        originalname: String
+    }, createdAt: {
+        type: Date,
+        default: Date.now()
     }
-})
+}, { timestamps: true })
 
 const User = model("user", userSchema)
 module.exports = User

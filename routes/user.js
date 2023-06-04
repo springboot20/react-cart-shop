@@ -4,8 +4,11 @@ const router = express.Router()
 const { signUp, signIn, me, newRefreshToken, newAccessToken, logOut, usersCount } = require("../controller/user.js")
 const { auth } = require("../utils/auth.js")
 const model = require("../model/index.js");
+const multer = require("multer")
 
-router.post("/signup", signUp)
+const upload = multer({dest: "/uploads"})
+
+router.post("/signup", upload.single("profilePhoto"), signUp)
 router.post("/signin", signIn)
 router.get("/count", usersCount)
 router.post("/auth/logout", auth, logOut)
