@@ -8,4 +8,4 @@ const allCountries = errorHandler(async (req, res, next) => {
     return countryDoc
 })
 
-modules.exports = allCountries
+module.exports = allCountries
