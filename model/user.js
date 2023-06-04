@@ -19,6 +19,12 @@ const userSchema = new Schema({
         filename: String,
         path: String,
         originalname: String
+    }, street_address: {
+        type: String,
+        require: [true, "address is required"]
+    }, city: {
+        type: String,
+        require: [true,]
     }, createdAt: {
         type: Date,
         default: Date.now()
