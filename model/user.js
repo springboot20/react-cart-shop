@@ -2,12 +2,12 @@ const mongoose = require("mongoose")
 const { Schema, model } = mongoose
 
 const userSchema = new Schema({
-    first_name: {
+    firstName: {
         type: String,
-        require: [true, "first_name is required"]
-    }, last_name: {
+        require: [true, "first name is required"]
+    }, lastName: {
         type: String,
-        require: [true, "last_name is required"]
+        require: [true, "last name is required"]
     }, email: {
         type: String,
         require: [true, "email is required"],
@@ -19,7 +19,7 @@ const userSchema = new Schema({
         filename: String,
         path: String,
         originalname: String
-    }, street_address: {
+    }, streetAddress: {
         type: String,
         require: [true, "address is required"]
     }, city: {

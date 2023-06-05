@@ -6,15 +6,12 @@ const orderSchema = new Schema({
     }, userId: {
         type: Schema.Types.ObjectId,
         ref: "User",
-    }, first_name: {
+    }, firstName: {
         type: String,
         required: [true, "first_name is required"]
-    }, last_name: {
+    }, lastName: {
         type: String,
         required: [true, "last_name is required"]
-    }, username: {
-        type: String,
-        required: [true, "username is required"]
     }, email: {
         type: String,
         required: [true, "email is required"],
@@ -22,6 +19,16 @@ const orderSchema = new Schema({
     }, address: {
         type: String,
         required: [true, "address is required"]
+    }, city: {
+        type: String,
+        required: [true, "city is required"]
+    }, state: {
+        type: String,
+        require: [true, "state is required"]
+    }, zipCode: {
+        type: Number,
+        require: [true, "zip code is required"],
+        maxLength: 8
     }, orderAt: {
         type: Date,
         default: Date.now()
