@@ -1,43 +1,70 @@
 const { Schema, model } = require("mongoose")
 
+const cartSchema = new Schema({
+    product: {
+        type: String,
+        required: true
+    },
+    quantity: {
+        type: Number,
+        required: true,
+        min: 1
+    },
+    price: {
+        type: Number,
+        required: true,
+        min: 0
+    }
+})
+
 const orderSchema = new Schema({
     id: {
         type: String
-    }, userId: {
+    },
+    userId: {
         type: Schema.Types.ObjectId,
         ref: "User",
-    }, firstName: {
+    },
+    firstName: {
         type: String,
-        required: [true, "first_name is required"]
-    }, lastName: {
+        required: true
+    },
+    lastName: {
         type: String,
-        required: [true, "last_name is required"]
-    }, email: {
+        required: true
+    },
+    email: {
         type: String,
-        required: [true, "email is required"],
+        required: true,
         unique: true
-    }, address: {
+    },
+    cartItems: [cartSchema],
+    address: {
+        city: {
+            type: String,
+            required: true
+        }, state: {
+            type: String,
+            require: true
+        }, zipCode: {
+            type: Number,
+            require: true
+        }
+    },
+    status: {
         type: String,
-        required: [true, "address is required"]
-    }, city: {
-        type: String,
-        required: [true, "city is required"]
-    }, state: {
-        type: String,
-        require: [true, "state is required"]
-    }, zipCode: {
-        type: Number,
-        require: [true, "zip code is required"],
-        maxLength: 8
-    }, orderAt: {
+        enums: ["declined", "pending", "completed"],
+        default: "pending"
+    },
+    orderAt: {
         type: Date,
         default: Date.now()
-    }, orderBy: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-        required: [true, "user is required"]
     }
 }, { timestamps: true })
 
 const Order = model("order", orderSchema)
-module.exports = Order
+const CartItem = model("cartItem", cartSchema)
+module.exports = {
+    Order,
+    CartItem
+}

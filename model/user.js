@@ -4,27 +4,27 @@ const { Schema, model } = mongoose
 const userSchema = new Schema({
     firstName: {
         type: String,
-        require: [true, "first name is required"]
+        require: true
     }, lastName: {
         type: String,
-        require: [true, "last name is required"]
+        require: true
     }, email: {
         type: String,
-        require: [true, "email is required"],
+        require: true,
         unique: true
     }, password: {
         type: String,
-        require: [true, "password is required"]
+        require: true
     }, profilePhoto: {
         filename: String,
         path: String,
         originalname: String
     }, streetAddress: {
         type: String,
-        require: [true, "address is required"]
+        require: true
     }, city: {
         type: String,
-        require: [true,]
+        require: true
     }, createdAt: {
         type: Date,
         default: Date.now()
