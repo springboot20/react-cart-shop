@@ -1,19 +1,28 @@
 const { Schema, model } = require("mongoose")
 
 const cartSchema = new Schema({
+    addedBy: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        require: true
+    },
     product: {
         type: String,
-        required: true
+        require: true
     },
     quantity: {
         type: Number,
-        required: true,
+        require: true,
         min: 1
     },
     price: {
         type: Number,
-        required: true,
+        require: true,
         min: 0
+    },
+    addedAt: {
+        type: Date,
+        default: Date.now()
     }
 })
 
@@ -27,22 +36,22 @@ const orderSchema = new Schema({
     },
     firstName: {
         type: String,
-        required: true
+        require: true
     },
     lastName: {
         type: String,
-        required: true
+        require: true
     },
     email: {
         type: String,
-        required: true,
+        require: true,
         unique: true
     },
     cartItems: [cartSchema],
     address: {
         city: {
             type: String,
-            required: true
+            require: true
         }, state: {
             type: String,
             require: true
@@ -56,7 +65,7 @@ const orderSchema = new Schema({
         enums: ["declined", "pending", "completed"],
         default: "pending"
     },
-    orderAt: {
+    checkOutAt: {
         type: Date,
         default: Date.now()
     }
@@ -64,6 +73,7 @@ const orderSchema = new Schema({
 
 const Order = model("order", orderSchema)
 const CartItem = model("cartItem", cartSchema)
+
 module.exports = {
     Order,
     CartItem

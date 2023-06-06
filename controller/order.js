@@ -3,7 +3,7 @@ const model = require("../model/index.js")
 
 
 const getOrders = errorHandler(async (req, res, next) => {
-    const orderDoc = await model.Order.find({ orderBy: req.userId }).sort("orderAt")
+    const orderDoc = await model.Order.find({ chekBy: req.userId }).sort("orderAt")
 
     return orderDoc
 })
@@ -46,10 +46,13 @@ const deleteOrder = errorHandler(async (req, res, next) => {
     return orderDoc
 })
 
+
+
 module.exports = {
     makeOrder,
     getOrders,
     getOrder,
     updateOrder,
-    deleteOrder
+    deleteOrder,
+    addToCart
 }
