@@ -14,18 +14,29 @@ const getOrders = errorHandler(async (req, res, next) => {
 
 const getOrder = errorHandler(async (req, res, next) => {
     const { userId, params: { id: orderId } } = req
+    req.body.checkBy = userId
 
-    const orderDoc = await model.Order.findOne({ _id: orderId, orderBy: userId }).populate("cartItems").exec()
+    const orderDoc = await model.Order.findOne({ _id: orderId }).populate("cartItems").exec()
 
     return orderDoc
 })
 
 const makeOrder = errorHandler(withTransactions(async (req, res, session) => {
-    req.body.orderBy = req.userId
+    req.body.checkBy = req.userId
 
     const orderDoc = new model.Order({ ...req.body, id: new Date().getTime().toString(36) + new Date().getUTCMilliseconds() })
 
     await orderDoc.save({ session })
+
+    // Find the cart items associated with the current user
+    const cartDoc = await model.CartItem.find({ addedBy: req.userId });
+
+    // Associate the cart items with the order
+    orderDoc.cartItems = cartDoc.map(cart => cart._id);
+
+    // Remove the cart items from the database after associating them with the order
+    await model.CartItem.deleteMany({ addedBy: req.userId });
+
 
     return orderDoc
 }))

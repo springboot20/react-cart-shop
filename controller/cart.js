@@ -12,11 +12,7 @@ const addToCart = errorHandler(withTransactions(async (req, res, session) => {
 }))
 
 const getAllCart = errorHandler(async (req, res, next) => {
-    const { userId } = req
-
-    const cartDoc = await model.CartItem.findOne({
-        addedBy: userId
-    })
+    const cartDoc = await model.CartItem.find().sort("addedAt").populate("orders").exec()
 
     return cartDoc
 })
