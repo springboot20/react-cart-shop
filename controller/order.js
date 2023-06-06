@@ -53,6 +53,5 @@ module.exports = {
     getOrders,
     getOrder,
     updateOrder,
-    deleteOrder,
-    addToCart
+    deleteOrder
 }

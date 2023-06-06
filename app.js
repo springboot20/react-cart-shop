@@ -7,6 +7,7 @@ const bodyParser = require("body-parser")
 const userRouter = require("./routes/user")
 const productRouter = require("./routes/product")
 const orderRouter = require("./routes/order")
+const cartRouter = require("./routes/cart")
 const { auth } = require("./utils/auth")
 
 const app = express()
@@ -38,6 +39,7 @@ app.use(cors({ origin: "*" }))
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/products', auth, productRouter)
 app.use('/api/v1/orders', auth, orderRouter)
+app.use('/api/v1/cart', auth, cartRouter)
 
 app.get('/', (req, res, next) => {
     res.header("Access-Control-Allow-Headers", "*");

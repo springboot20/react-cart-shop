@@ -3,13 +3,8 @@ const model = require("../model/index.js")
 
 
 const addToCart = errorHandler(withTransactions(async (req, res, session) => {
-    const { price, product, quantity } = req.body
-
-    const cartDoc = new model.CartItem({
-        price,
-        product,
-        quantity
-    })
+    req.body.addedBy = req.userId
+    const cartDoc = new model.CartItem({ ...req.body, id: new Date().getTime().toString(32) + new Date().getUTCMilliseconds() })
 
     await cartDoc.save({ session })
 
@@ -46,9 +41,16 @@ const deleteCartItem = errorHandler(async (req, res, next) => {
     return cartDoc
 })
 
+const cartCount = errorHandler(async (req, res, next) => {
+    const cartDoc = await model.CartItem.countDocuments()
+
+    return cartDoc
+})
+
 module.exports = {
     addToCart,
     getAllCart,
     updateCartItem,
-    deleteCartItem
+    deleteCartItem,
+    cartCount
 }
