@@ -26,14 +26,18 @@ const cartSchema = new Schema({
     addedAt: {
         type: Date,
         default: Date.now()
-    }
+    },
+    orders: [{
+        type: Schema.Types.ObjectId,
+        ref: "Order"
+    }]
 })
 
 const orderSchema = new Schema({
     id: {
         type: String
     },
-    userId: {
+    checkBy: {
         type: Schema.Types.ObjectId,
         ref: "User",
     },
@@ -50,7 +54,6 @@ const orderSchema = new Schema({
         require: true,
         unique: true
     },
-    cartItems: [cartSchema],
     address: {
         city: {
             type: String,
@@ -63,6 +66,7 @@ const orderSchema = new Schema({
             require: true
         }
     },
+    cartItems: [{ type: Schema.Types.ObjectId, ref: "CartItem" }],
     status: {
         type: String,
         enums: ["declined", "pending", "completed"],
@@ -74,8 +78,8 @@ const orderSchema = new Schema({
     }
 }, { timestamps: true })
 
-const Order = model("order", orderSchema)
-const CartItem = model("cartItem", cartSchema)
+const Order = model("Order", orderSchema)
+const CartItem = model("CartItem", cartSchema)
 
 module.exports = {
     Order,

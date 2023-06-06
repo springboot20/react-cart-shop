@@ -79,26 +79,24 @@ const newAccessToken = errorHandler(async (req, res, session) => {
 
 const signUp = errorHandler(
     withTransactions(async (req, res, session) => {
-        const { first_name, last_name, email, password } = req.body;
-        const { filename, path, originalname } = req.file
+        const { firstName, lastName, email, password, city, stressAddress, state, zipCode, country } = req.body;
 
         const existingUser = await model.User.findOne({ email });
 
         if (existingUser) throw new HTTPError(409, "User already exists....");
-        if (!req.file) throw new HTTPError(400, "No profile photo recieved")
 
         const hashedPassword = await bcrypt.hash(password, 12);
 
         const userDoc = new model.User({
-            first_name,
-            last_name,
+            firstName,
+            lastName,
             email,
             password: hashedPassword,
-            profilePhoto: {
-                filename,
-                path,
-                originalname
-            }
+            city,
+            stressAddress,
+            state,
+            country,
+            zipCode
         });
 
         const refreshDoc = new model.RefreshToken({

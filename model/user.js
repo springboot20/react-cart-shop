@@ -15,10 +15,12 @@ const userSchema = new Schema({
     }, password: {
         type: String,
         require: true
-    }, profilePhoto: {
-        filename: String,
-        path: String,
-        originalname: String
+    }, state: {
+        type: String,
+        require: true
+    }, country: {
+        type: String,
+        require: true
     }, streetAddress: {
         type: String,
         require: true
@@ -28,8 +30,11 @@ const userSchema = new Schema({
     }, createdAt: {
         type: Date,
         default: Date.now()
+    }, zipCode: {
+        type: Number,
+        require: true
     }
 }, { timestamps: true })
 
-const User = model("user", userSchema)
+const User = model("User", userSchema)
 module.exports = User

@@ -3,7 +3,11 @@ const model = require("../model/index.js")
 
 
 const getOrders = errorHandler(async (req, res, next) => {
-    const orderDoc = await model.Order.find({ chekBy: req.userId }).sort("orderAt")
+    const orderDoc = await model.Order
+        .find()
+        .sort("checkOutAt")
+        .populate("cartItems")
+        .exec()
 
     return orderDoc
 })
@@ -11,7 +15,7 @@ const getOrders = errorHandler(async (req, res, next) => {
 const getOrder = errorHandler(async (req, res, next) => {
     const { userId, params: { id: orderId } } = req
 
-    const orderDoc = await model.Order.findOne({ _id: orderId, orderBy: userId })
+    const orderDoc = await model.Order.findOne({ _id: orderId, orderBy: userId }).populate("cartItems").exec()
 
     return orderDoc
 })
