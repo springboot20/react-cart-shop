@@ -8,7 +8,7 @@ const userRouter = require("./routes/user")
 const productRouter = require("./routes/product")
 const orderRouter = require("./routes/order")
 const cartRouter = require("./routes/cart")
-const { auth } = require("./utils/auth")
+const { HTTPError } = require("./error")
 
 const app = express()
 
@@ -37,21 +37,18 @@ app.use(bodyParser.json())
 app.use(cors({ origin: "*" }))
 
 app.use('/api/v1/users', userRouter)
-app.use('/api/v1/products', auth, productRouter)
-app.use('/api/v1/orders', auth, orderRouter)
-app.use('/api/v1/cart', auth, cartRouter)
+app.use('/api/v1/products', productRouter)
+app.use('/api/v1/orders', orderRouter)
+app.use('/api/v1/cart', cartRouter)
 
 app.get('/', (req, res, next) => {
     res.header("Access-Control-Allow-Headers", "*");
-    res.header("Content-Range", "users 0-90/90")
-    res.send("Hello world from home page");
 
     next()
 })
 
 app.use((req, res, next) => {
-    const err = new Error("Not found");
-    err.status = 404;
+    const err = new HTTPError(404, "Not found");
     next(err);
 });
 

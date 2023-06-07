@@ -1,8 +1,9 @@
+const { default: mongoose } = require("mongoose")
 const { errorHandler, withTransactions } = require("../error")
 const model = require("../model/index.js")
 
 const createProduct = errorHandler(withTransactions(async (req, res, session) => {
-    req.body.createdBy = req.userId
+    req.body.createdBy = req.user.userId
 
     const productDocs = new model.Product({ ...req.body, id: new Date().getTime().toString(36) + new Date().getUTCMilliseconds() })
     await productDocs.save({ session })
@@ -11,28 +12,28 @@ const createProduct = errorHandler(withTransactions(async (req, res, session) =>
 }))
 
 const getAllProducts = errorHandler(async (req, res, next) => {
-    const products = await model.Product.find({ createdBy: req.userId }).sort("createdAt")
-    console.log(req.userId)
+    const products = await model.Product.find({ createdBy: req.user.userId }).sort("createdAt")
+    console.log(req.user.userId)
     return products
 })
 
 const getProductsByType = errorHandler(async (req, res, next) => {
-    const { userId, params: { type: productType } } = req
+    const { params: { type: productType } } = req
 
     const productDoc = await model.Product.find({
         productType: productType,
-        createdBy: userId
+        createdBy: req.user.userId
     })
 
     return productDoc
 })
 
 const updateProduct = errorHandler(withTransactions(async (req, res, session) => {
-    const { userId, params: { id: productId } } = req
+    const { params: { id: productId } } = req
 
     const productDoc = await model.Product.findOneAndUpdate({
         _id: productId,
-        createdBy: userId
+        createdBy: req.user.userId
     }, req.body, { new: true })
 
     await productDoc.save({ session })
@@ -51,14 +52,14 @@ const deleteProduct = errorHandler(async (req, res, next) => {
 })
 
 const getProduct = errorHandler(async (req, res, next) => {
-    const { userId, params: { id: productId } } = req
+    const { params: { id: productId } } = req
 
     const productDoc = await model.Product.findOne({
         _id: productId,
-        createdBy: userId
+        createdBy: req.user.userId
     })
 
-    console.log(req.userId)
+    console.log(req.user.userId)
     return productDoc
 })
 

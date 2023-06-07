@@ -3,7 +3,7 @@ const model = require("../model/index.js")
 
 
 const addToCart = errorHandler(withTransactions(async (req, res, session) => {
-    req.body.addedBy = req.userId
+    req.body.addedBy = req.user.userId
     const cartDoc = new model.CartItem({ ...req.body, id: new Date().getTime().toString(32) + new Date().getUTCMilliseconds() })
 
     await cartDoc.save({ session })
@@ -18,12 +18,11 @@ const getAllCart = errorHandler(async (req, res, next) => {
 })
 
 const updateCartItem = errorHandler(withTransactions(async (req, res, next) => {
-    const { userId, params: { id: itemId } } = req
+    const { params: { id: itemId } } = req
 
     const cartDoc = await model.CartItem.findOneAndUpdate({
-        _id: itemId,
-        addedBy: userId,
-    }, req.body, { new: true })
+        _id: itemId
+    }, { $set: req.body }, { new: true })
 
     await cartDoc.save({ session })
 

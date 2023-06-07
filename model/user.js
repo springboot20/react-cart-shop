@@ -27,12 +27,13 @@ const userSchema = new Schema({
     }, city: {
         type: String,
         require: true
-    }, createdAt: {
-        type: Date,
-        default: Date.now()
     }, zipCode: {
         type: Number,
         require: true
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true })
 

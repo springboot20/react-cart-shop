@@ -20,17 +20,17 @@ const cartSchema = new Schema({
     },
     price: {
         type: Number,
-        require: true,
-        min: 0
-    },
-    addedAt: {
-        type: Date,
-        default: Date.now()
+        require: true
     },
     orders: [{
         type: Schema.Types.ObjectId,
         ref: "Order"
-    }]
+    }],
+    ratings: {
+        type: Number,
+        min: 0,
+        max: 5
+    }
 })
 
 const orderSchema = new Schema({
@@ -66,15 +66,11 @@ const orderSchema = new Schema({
             require: true
         }
     },
-    cartItems: [{ type: Schema.Types.ObjectId, ref: "CartItem" }],
+    cartItems: [String],
     status: {
         type: String,
         enums: ["declined", "pending", "completed"],
         default: "pending"
-    },
-    checkOutAt: {
-        type: Date,
-        default: Date.now()
     }
 }, { timestamps: true })
 
