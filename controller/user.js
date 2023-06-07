@@ -2,10 +2,11 @@ const jwt = require("jsonwebtoken");
 const { HTTPError, withTransactions, errorHandler } = require("../error/index");
 const model = require("../model/index");
 const bcrypt = require("bcryptjs");
+const { default: mongoose } = require("mongoose");
 
-const generateRefreshToken = (user, refreshId) => {
+const generateRefreshToken = (userId, refreshId) => {
     const refreshToken = jwt.sign(
-        { user: user, tokenId: refreshId },
+        { userId: userId, tokenId: refreshId },
         process.env.REFRESH_TOKEN_SECRET,
         { expiresIn: "30d" },
     );
@@ -13,8 +14,8 @@ const generateRefreshToken = (user, refreshId) => {
     return refreshToken;
 };
 
-const generateAccessToken = (user, isAdmin) => {
-    const accessToken = jwt.sign({ user: user, isAdmin: isAdmin }, process.env.ACCESS_TOKEN_SECRET, {
+const generateAccessToken = (userId, isAdmin) => {
+    const accessToken = jwt.sign({ userId: userId, isAdmin: isAdmin }, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: "2h",
     });
 
@@ -48,28 +49,28 @@ const newRefreshToken = errorHandler(
             req.body.refreshToken,
         );
         const refreshTokenDoc = new model.RefreshToken({
-            user: currentRefreshToken.user,
+            userId: currentRefreshToken.userId,
         });
 
         await refreshTokenDoc.save({ session });
         await model.RefreshToken.deleteOne({ _id: currentRefreshToken.tokenId }, { session });
 
         const refreshToken = generateRefreshToken(
-            currentRefreshToken.user,
+            currentRefreshToken.userId,
             refreshTokenDoc.id,
         );
-        const accessToken = generateAccessToken(currentRefreshToken.user, currentRefreshToken.isAdmin);
+        const accessToken = generateAccessToken(currentRefreshToken.userId, currentRefreshToken.isAdmin);
 
-        return { id: currentRefreshToken.user, accessToken, refreshToken };
+        return { id: currentRefreshToken.userId, accessToken, refreshToken };
     }),
 );
 
 const newAccessToken = errorHandler(async (req, res, session) => {
     const refreshToken = await validateRefreshToken(req.body.refreshToken);
-    const accessToken = generateAccessToken(refreshToken.user, refreshToken.isAdmin);
+    const accessToken = generateAccessToken(refreshToken.userId, refreshToken.isAdmin);
 
     return {
-        id: refreshToken.user,
+        id: refreshToken.userId,
         accessToken,
         refreshToken: req.body.refreshToken,
     };
@@ -98,7 +99,7 @@ const signUp = errorHandler(
         });
 
         const refreshDoc = new model.RefreshToken({
-            user: userDoc.id,
+            userId: userDoc.id,
         });
 
         await refreshDoc.save({ session });
@@ -170,8 +171,8 @@ const deleteUser = errorHandler(async (req, res, next) => {
     return userDoc
 })
 
-const me = errorHandler(async (req, res) => {
-    const userDoc = await model.User.findById(req.user).exec()
+const me = errorHandler(async (req, res, next) => {
+    const userDoc = await model.User.findById(req.user.user)
     if (!userDoc) { throw new HTTPError(400, " User not found") }
 
     return userDoc
