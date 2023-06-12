@@ -16,7 +16,7 @@ router.patch("/:id", auth, updateUser)
 router.delete("/:id", auth, deleteUser)
 
 // for Admin
-router.put('/:id/admin', isAdmin, setAdmin);
+router.patch('/:id/admin', isAdmin, setAdmin);
 
 
 
