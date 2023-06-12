@@ -150,7 +150,7 @@ const getAllUsers = errorHandler(async (req, res, next) => {
 })
 
 const setAdmin = errorHandler(withTransactions(async (req, res, session) => {
-    const { params: { id: userId } } = req
+    const { params: { id } } = req
     
     const userDoc = await model.User.findeOne(userId)
     userDoc.isAdmin = true
