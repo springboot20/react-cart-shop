@@ -2,7 +2,7 @@ const { errorHandler, withTransactions } = require("../error")
 const model = require("../model/index.js")
 
 const createProduct = errorHandler(withTransactions(async (req, res, session) => {
-    const productDocs = new model.Product({ ...req.body, id: new Date().getTime().toString(36) + new Date().getUTCMilliseconds() })
+    const productDocs = new model.Product({ ...req.body })
     await productDocs.save({ session })
 
     return productDocs

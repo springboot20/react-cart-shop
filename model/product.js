@@ -8,7 +8,7 @@ const productSchema = new Schema({
         require: true
     },
     id: {
-        type: String,
+        type: mongoose.Types.ObjectId,
     },
     imageUrl: {
         type: String,

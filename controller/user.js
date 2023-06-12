@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 const { HTTPError, withTransactions, errorHandler } = require("../error/index");
 const model = require("../model/index");
 const bcrypt = require("bcryptjs");
-const { default: mongoose } = require("mongoose");
 
 const generateRefreshToken = (userId, refreshId) => {
     const refreshToken = jwt.sign(
@@ -35,6 +34,7 @@ async function validateRefreshToken(token) {
     const tokenExist = await model.RefreshToken.exists({
         _id: decodedToken.tokenId,
     });
+
     if (tokenExist) {
         return decodedToken;
     } else {
@@ -43,26 +43,18 @@ async function validateRefreshToken(token) {
 }
 
 // Middleware to authenticate the refresh token
-const newRefreshToken = errorHandler(
-    withTransactions(async (req, res, session) => {
-        const currentRefreshToken = await validateRefreshToken(
-            req.body.refreshToken,
-        );
-        const refreshTokenDoc = new model.RefreshToken({
-            userId: currentRefreshToken.userId,
-        });
+const newRefreshToken = errorHandler(withTransactions(async (req, res, session) => {
+    const currentRefreshToken = await validateRefreshToken(req.body.refreshToken);
+    const refreshTokenDoc = new model.RefreshToken({ userId: currentRefreshToken.userId });
+    console.log(currentRefreshToken.userId)
 
-        await refreshTokenDoc.save({ session });
-        await model.RefreshToken.deleteOne({ _id: currentRefreshToken.tokenId }, { session });
+    await refreshTokenDoc.save({ session });
+    await model.RefreshToken.deleteOne({ _id: currentRefreshToken.tokenId }, { session });
 
-        const refreshToken = generateRefreshToken(
-            currentRefreshToken.userId,
-            refreshTokenDoc.id,
-        );
-        const accessToken = generateAccessToken(currentRefreshToken.userId, currentRefreshToken.isAdmin);
-
-        return { id: currentRefreshToken.userId, accessToken, refreshToken };
-    }),
+    const refreshToken = generateRefreshToken(currentRefreshToken.userId, refreshTokenDoc.id);
+    const accessToken = generateAccessToken(currentRefreshToken.userId, currentRefreshToken.isAdmin);
+    return { id: currentRefreshToken.userId, accessToken, refreshToken };
+}),
 );
 
 const newAccessToken = errorHandler(async (req, res, session) => {
@@ -77,12 +69,14 @@ const signUp = errorHandler(
         const { id, password, ...rest } = req.body;
         const hashedPassword = await bcrypt.hash(password, 12);
 
-        const userDoc = new model.User({ ...rest, id: new Date().getTime().toString(36) + new Date().getUTCMilliseconds(), password: hashedPassword, });
+        const userDoc = new model.User({ ...rest, password: hashedPassword, });
 
         const refreshDoc = new model.RefreshToken({ userId: userDoc.id });
 
         await refreshDoc.save({ session });
         await userDoc.save({ session });
+
+        console.log(userDoc.id)
 
         const refreshToken = generateRefreshToken(userDoc.id, refreshDoc.id);
         const accessToken = generateAccessToken(userDoc.id, userDoc.isAdmin);
@@ -102,14 +96,14 @@ const signIn = errorHandler(
 
         if (!isCorrectPassword) throw new HTTPError(409, "Invalid password, try aagain!!");
 
-        const refreshDoc = new model.RefreshToken({ user: userDoc.id });
+        const refreshDoc = new model.RefreshToken({ userId: userDoc.id });
 
         await refreshDoc.save({ session });
 
         const refreshToken = generateRefreshToken(userDoc.id, refreshDoc.id);
         const accessToken = generateAccessToken(userDoc.id, userDoc.isAdmin);
-
-        return { id: userDoc.id, refreshToken, accessToken, };
+        console.log(userDoc._id)
+        return { id: userDoc.id, refreshToken, accessToken };
     })
 );
 
@@ -137,7 +131,7 @@ const deleteUser = errorHandler(async (req, res, next) => {
 })
 
 const me = errorHandler(async (req, res, next) => {
-    const userDoc = await model.User.findById(req.user.user)
+    const userDoc = await model.User.findById(req.user.userId)
     if (!userDoc) { throw new HTTPError(400, " User not found") }
 
     return userDoc

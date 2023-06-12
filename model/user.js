@@ -2,9 +2,7 @@ const mongoose = require("mongoose")
 const { Schema, model } = mongoose
 
 const userSchema = new Schema({
-    id: {
-        type: String
-    }, firstName: {
+    firstName: {
         type: String,
         require: true,
         default: null

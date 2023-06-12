@@ -32,9 +32,9 @@ process.on("SIGINT", () => {
 })
 
 app.use(express.json())
+app.use(cors({ origin: "http://localhost:3000" }))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-app.use(cors({ origin: "*" }))
 
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/products', productRouter)
@@ -43,7 +43,6 @@ app.use('/api/v1/cart', cartRouter)
 
 app.get('/', (req, res, next) => {
     res.header("Access-Control-Allow-Headers", "*");
-
     next()
 })
 
