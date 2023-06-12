@@ -149,6 +149,17 @@ const getAllUsers = errorHandler(async (req, res, next) => {
     return userDoc
 })
 
+const setAdmin = errorHandler(withTransactions(async (req, res, session) => {
+    const { params: { id: userId } } = req
+    
+    const userDoc = await model.User.findeOne(userId)
+    userDoc.isAdmin = true
+
+    await userDoc.save({session})
+
+    return userDoc
+}))
+
 module.exports = {
     signIn,
     signUp,
@@ -159,5 +170,6 @@ module.exports = {
     usersCount,
     getAllUsers,
     deleteUser,
-    updateUser
+    updateUser,
+    setAdmin
 };

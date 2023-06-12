@@ -43,6 +43,7 @@ app.use('/api/v1/cart', cartRouter)
 
 app.get('/', (req, res, next) => {
     res.header("Access-Control-Allow-Headers", "*");
+    res.send("welcome to home route")
     next()
 })
 
