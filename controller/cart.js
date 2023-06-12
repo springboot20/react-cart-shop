@@ -3,16 +3,18 @@ const model = require("../model/index.js")
 
 
 const addToCart = errorHandler(withTransactions(async (req, res, session) => {
-    req.body.addedBy = req.user.userId
+    req.body.userId = req.user.userId
+
+    const { params: { id: orderId } } = req
     const cartDoc = new model.CartItem({ ...req.body, id: new Date().getTime().toString(32) + new Date().getUTCMilliseconds() })
+    const savedCart = await cartDoc.save({ session })
+    await model.Order.findByIdAndUpdate(orderId, { $push: { orderId: cartDoc._id } })
 
-    await cartDoc.save({ session })
-
-    return cartDoc
+    return savedCart
 }))
 
 const getAllCart = errorHandler(async (req, res, next) => {
-    const cartDoc = await model.CartItem.find().sort("addedAt").populate("orders").exec()
+    const cartDoc = await model.CartItem.find().exec()
 
     return cartDoc
 })
@@ -20,10 +22,7 @@ const getAllCart = errorHandler(async (req, res, next) => {
 const updateCartItem = errorHandler(withTransactions(async (req, res, next) => {
     const { params: { id: itemId } } = req
 
-    const cartDoc = await model.CartItem.findOneAndUpdate({
-        _id: itemId
-    }, { $set: req.body }, { new: true })
-
+    const cartDoc = await model.CartItem.findOneAndUpdate({ _id: itemId }, { $set: req.body }, { new: true })
     await cartDoc.save({ session })
 
     return cartDoc

@@ -1,10 +1,7 @@
-const { default: mongoose } = require("mongoose")
 const { errorHandler, withTransactions } = require("../error")
 const model = require("../model/index.js")
 
 const createProduct = errorHandler(withTransactions(async (req, res, session) => {
-    req.body.createdBy = req.user.userId
-
     const productDocs = new model.Product({ ...req.body, id: new Date().getTime().toString(36) + new Date().getUTCMilliseconds() })
     await productDocs.save({ session })
 
@@ -12,18 +9,18 @@ const createProduct = errorHandler(withTransactions(async (req, res, session) =>
 }))
 
 const getAllProducts = errorHandler(async (req, res, next) => {
-    const products = await model.Product.find({ createdBy: req.user.userId }).sort("createdAt")
-    console.log(req.user.userId)
+    const products = await model.Product.find().sort("createdAt")
     return products
 })
 
 const getProductsByType = errorHandler(async (req, res, next) => {
-    const { params: { type: productType } } = req
+    const productsType = req.query.productsType.split(",")
 
-    const productDoc = await model.Product.find({
-        productType: productType,
-        createdBy: req.user.userId
-    })
+    const productDoc = await Promise.all(productsType.map((type) => {
+        return model.Product.find({
+            productType: type
+        })
+    }))
 
     return productDoc
 })
@@ -31,10 +28,7 @@ const getProductsByType = errorHandler(async (req, res, next) => {
 const updateProduct = errorHandler(withTransactions(async (req, res, session) => {
     const { params: { id: productId } } = req
 
-    const productDoc = await model.Product.findOneAndUpdate({
-        _id: productId,
-        createdBy: req.user.userId
-    }, req.body, { new: true })
+    const productDoc = await model.Product.findOneAndUpdate({ _id: productId }, req.body, { new: true })
 
     await productDoc.save({ session })
     return productDoc
@@ -55,11 +49,8 @@ const getProduct = errorHandler(async (req, res, next) => {
     const { params: { id: productId } } = req
 
     const productDoc = await model.Product.findOne({
-        _id: productId,
-        createdBy: req.user.userId
+        _id: productId
     })
-
-    console.log(req.user.userId)
     return productDoc
 })
 

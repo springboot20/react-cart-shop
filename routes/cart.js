@@ -3,7 +3,7 @@ const { addToCart, getAllCart, deleteCartItem, updateCartItem } = require("../co
 const { isAdmin } = require("../utils/auth")
 
 router.get("/", getAllCart)
-router.post("/", isAdmin, addToCart)
+router.post("/:id", isAdmin, addToCart)
 router.patch("/:id", isAdmin, updateCartItem)
 router.delete("/:id", isAdmin, deleteCartItem)
 

@@ -69,38 +69,17 @@ const newAccessToken = errorHandler(async (req, res, session) => {
     const refreshToken = await validateRefreshToken(req.body.refreshToken);
     const accessToken = generateAccessToken(refreshToken.userId, refreshToken.isAdmin);
 
-    return {
-        id: refreshToken.userId,
-        accessToken,
-        refreshToken: req.body.refreshToken,
-    };
+    return { id: refreshToken.userId, accessToken, refreshToken: req.body.refreshToken, };
 });
 
 const signUp = errorHandler(
     withTransactions(async (req, res, session) => {
-        const { firstName, lastName, email, password, city, stressAddress, state, zipCode, country, isAdmin } = req.body;
-
-        const existingUser = await model.User.findOne({ email });
-
-        if (existingUser) throw new HTTPError(409, "User already exists....");
-
+        const { id, password, ...rest } = req.body;
         const hashedPassword = await bcrypt.hash(password, 12);
 
-        const userDoc = new model.User({
-            firstName,
-            lastName,
-            email,
-            password: hashedPassword,
-            city,
-            stressAddress,
-            state,
-            country,
-            zipCode, isAdmin
-        });
+        const userDoc = new model.User({ ...rest, id: new Date().getTime().toString(36) + new Date().getUTCMilliseconds(), password: hashedPassword, });
 
-        const refreshDoc = new model.RefreshToken({
-            userId: userDoc.id,
-        });
+        const refreshDoc = new model.RefreshToken({ userId: userDoc.id });
 
         await refreshDoc.save({ session });
         await userDoc.save({ session });
@@ -108,11 +87,7 @@ const signUp = errorHandler(
         const refreshToken = generateRefreshToken(userDoc.id, refreshDoc.id);
         const accessToken = generateAccessToken(userDoc.id, userDoc.isAdmin);
 
-        return {
-            id: userDoc.id,
-            refreshToken,
-            accessToken,
-        };
+        return { id: userDoc.id, refreshToken, accessToken, };
     }),
 );
 
@@ -123,28 +98,18 @@ const signIn = errorHandler(
 
         if (!userDoc) throw new HTTPError(409, "User do not exist!!");
 
-        const isCorrectPassword = await bcrypt.compare(
-            password,
-            userDoc.password,
-        );
+        const isCorrectPassword = await bcrypt.compare(password, userDoc.password,);
 
-        if (!isCorrectPassword)
-            throw new HTTPError(409, "Invalid password, try aagain!!");
+        if (!isCorrectPassword) throw new HTTPError(409, "Invalid password, try aagain!!");
 
-        const refreshDoc = new model.RefreshToken({
-            user: userDoc.id,
-        });
+        const refreshDoc = new model.RefreshToken({ user: userDoc.id });
 
         await refreshDoc.save({ session });
 
         const refreshToken = generateRefreshToken(userDoc.id, refreshDoc.id);
         const accessToken = generateAccessToken(userDoc.id, userDoc.isAdmin);
 
-        return {
-            id: userDoc.id,
-            refreshToken,
-            accessToken,
-        };
+        return { id: userDoc.id, refreshToken, accessToken, };
     })
 );
 

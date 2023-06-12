@@ -12,7 +12,7 @@ const productSchema = new Schema({
     },
     imageUrl: {
         type: String,
-        require: [true, "Image url is required"]
+        require: true
     },
     priceTag: {
         type: Number,
@@ -24,22 +24,12 @@ const productSchema = new Schema({
     },
     description: {
         type: String,
-        require: [true, "Description is required"]
+        require: true
     },
     productType: {
         type: String,
         enum: ["trouser", "shirt", "watch", "laptop", "sun glass", "snickers", "underwear"],
-        default: "shirt",
-        required: true
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now()
-    },
-    createdBy: {
-        type: mongoose.Types.ObjectId,
-        ref: "User",
-        require: [true, "User is required"]
+        default: "shirt"
     }
 }, { timestamps: true })
 

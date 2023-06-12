@@ -4,7 +4,7 @@ const cartSchema = new Schema({
     id: {
         type: String
     },
-    addedBy: {
+    userId: {
         type: Schema.Types.ObjectId,
         ref: "User",
         require: true
@@ -22,14 +22,11 @@ const cartSchema = new Schema({
         type: Number,
         require: true
     },
-    orders: [{
-        type: Schema.Types.ObjectId,
-        ref: "Order"
-    }],
     ratings: {
         type: Number,
         min: 0,
-        max: 5
+        max: 5,
+        default: 0
     }
 })
 

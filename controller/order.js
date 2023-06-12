@@ -3,11 +3,7 @@ const model = require("../model/index.js")
 
 
 const getOrders = errorHandler(async (req, res, next) => {
-    const orderDoc = await model.Order
-        .find()
-        .sort("checkOutAt")
-        .populate("cartItems")
-        .exec()
+    const orderDoc = await model.Order.find().exec()
 
     return orderDoc
 })
@@ -22,33 +18,20 @@ const getOrder = errorHandler(async (req, res, next) => {
 })
 
 const makeOrder = errorHandler(withTransactions(async (req, res, session) => {
+    const { params: { id: cartId } } = req
     req.body.checkBy = req.user.userId
 
     const orderDoc = new model.Order({ ...req.body, id: new Date().getTime().toString(36) + new Date().getUTCMilliseconds() })
+    const saveOrder = await orderDoc.save({ session })
+    await model.CartItem.findByIdAndUpdate(cartId, { $push: { cartId: orderDoc._id } })
 
-    await orderDoc.save({ session })
-
-    // Find the cart items associated with the current user
-    const cartDoc = await model.CartItem.find({ addedBy: req.user.userId });
-
-    // Associate the cart items with the order
-    orderDoc.cartItems = cartDoc.map(cart => cart._id);
-
-    // Remove the cart items from the database after associating them with the order
-    await model.CartItem.deleteMany({ addedBy: req.user.userId });
-
-
-    return orderDoc
+    return saveOrder
 }))
 
 const updateOrder = errorHandler(withTransactions(async (req, res, session) => {
-    const {  params: { id: orderId } } = req
+    const { params: { id: orderId } } = req
 
-    const orderDoc = await model.Order.findOneAndUpdate({
-        _id: orderId,
-        orderBy: req.user.userId
-    }, req.body, { new: true })
-
+    const orderDoc = await model.Order.findOneAndUpdate({ _id: orderId }, { $set: req.body }, { new: true })
     await orderDoc.save({ session })
 
     return orderDoc
@@ -60,8 +43,6 @@ const deleteOrder = errorHandler(async (req, res, next) => {
     const orderDoc = await model.Order.findOneAndDelete({ _id: orderId })
     return orderDoc
 })
-
-
 
 module.exports = {
     makeOrder,

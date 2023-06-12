@@ -10,7 +10,7 @@ const verifyToken = (req, res, next) => {
     }
 
     jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (error, userId) => {
-        if (error) return next(new HTTPError(403, "Tokenis not valid"))
+        if (error) return next(new HTTPError(403, "Token is not valid"))
         req.user = userId
 
         console.log(req.user)
@@ -39,7 +39,6 @@ const isAdmin = (req, res, next) => {
         }
     })
 }
-
 
 module.exports = { auth, isAdmin };
 
