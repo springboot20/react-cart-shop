@@ -1,6 +1,9 @@
 const { HTTPError } = require("../error/index.js");
-const model = require("../model/index.js");
 const jwt = require("jsonwebtoken");
+
+/**
+ * @params
+ */
 
 const verifyToken = (req, res, next) => {
     const accessToken = req.headers?.authorization.split(" ")[1]

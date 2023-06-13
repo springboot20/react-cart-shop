@@ -18,6 +18,4 @@ router.delete("/:id", auth, deleteUser)
 // for Admin
 router.patch('/:id/admin', isAdmin, setAdmin);
 
-
-
 module.exports = router
