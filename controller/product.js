@@ -48,9 +48,7 @@ const deleteProduct = errorHandler(async (req, res, next) => {
 const getProduct = errorHandler(async (req, res, next) => {
     const { params: { id: productId } } = req
 
-    const productDoc = await model.Product.findOne({
-        _id: productId
-    })
+    const productDoc = await model.Product.findById(productId)
     return productDoc
 })
 
