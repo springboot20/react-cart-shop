@@ -26,7 +26,6 @@ const cartSchema = new Schema(
       type: Number,
       require: true,
     },
-    products: [String],
   },
   { timestamps: true }
 );
