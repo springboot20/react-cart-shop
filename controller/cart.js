@@ -39,12 +39,12 @@ const updateCartItem = errorHandler(
 
 const deleteCartItem = errorHandler(async (req, res, next) => {
   const {
-    params: { id: itemId },
+    params: { id: productId },
   } = req;
 
-  const cartDoc = await model.CartItem.findOneAndDelete({ _id: itemId });
+  const cartDoc = await model.CartItem.findByIdAndDelete(req.params.id);
   try {
-    await model.Order.findByIdAndDelete(itemId, { $pull: { orders: req.params.id } });
+    await model.Product.findByIdAndUpdate(productId, { $pull: { cartItems: req.params.id } });
   } catch (error) {
     throw new HTTPError(409, error.message);
   }

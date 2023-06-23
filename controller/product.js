@@ -1,6 +1,6 @@
 /** @format */
 
-const { errorHandler, withTransactions } = require('../error');
+const { errorHandler, withTransactions, HTTPError } = require('../error');
 const model = require('../model/index.js');
 
 const createProduct = errorHandler(
@@ -51,13 +51,15 @@ const updateProduct = errorHandler(
 
 const deleteProduct = errorHandler(async (req, res, next) => {
   const {
-    params: { id: productId },
+    params: { id: cartId },
   } = req;
 
-  const productDoc = await model.Product.findOneAndDelete({
-    _id: productId,
-  });
-
+  const productDoc = await model.Product.findByIdAndDelete(req.params.id);
+  try {
+    await model.Cart.findByIdAndUpdate(cartId, { $pull: { products: req.params.id } });
+  } catch (error) {
+    throw new HTTPError(409, error.message);
+  }
   return productDoc;
 });
 
