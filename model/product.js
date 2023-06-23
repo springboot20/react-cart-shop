@@ -34,6 +34,11 @@ const productSchema = new Schema(
       enum: ['trouser', 'shirt', 'watch', 'laptop', 'sun glass', 'snickers', 'underwear'],
       default: 'shirt',
     },
+    ratings: {
+      type: Number,
+      min: 0,
+      max: 5,
+    },
   },
   { timestamps: true }
 );

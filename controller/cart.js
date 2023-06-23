@@ -6,13 +6,13 @@ const model = require('../model/index.js');
 const addToCart = errorHandler(
   withTransactions(async (req, res, session) => {
     req.body.userId = req.user.userId;
-
     const {
       params: { id: orderId },
     } = req;
-    const cartDoc = new model.CartItem({ ...req.body, id: new Date().getTime().toString(32) + new Date().getUTCMilliseconds() });
+
+    const cartDoc = new model.CartItem(req.body);
     const savedCart = await cartDoc.save({ session });
-    await model.Order.findByIdAndUpdate(orderId, { $push: { orderId: cartDoc._id } });
+    await model.Order.findByIdAndUpdate(orderId, { $push: { cartItems: cartDoc._id } });
 
     return savedCart;
   })
@@ -43,6 +43,11 @@ const deleteCartItem = errorHandler(async (req, res, next) => {
   } = req;
 
   const cartDoc = await model.CartItem.findOneAndDelete({ _id: itemId });
+  try {
+    await model.Order.findByIdAndDelete(itemId, { $pull: { orders: req.params.id } });
+  } catch (error) {
+    throw new HTTPError(409, error.message);
+  }
   return cartDoc;
 });
 

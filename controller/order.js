@@ -27,9 +27,9 @@ const makeOrder = errorHandler(
     } = req;
     req.body.checkBy = req.user.userId;
 
-    const orderDoc = new model.Order({ ...req.body, id: new Date().getTime().toString(36) + new Date().getUTCMilliseconds() });
+    const orderDoc = new model.Order(req.body);
     const saveOrder = await orderDoc.save({ session });
-    await model.CartItem.findByIdAndUpdate(cartId, { $push: { cartId: orderDoc._id } });
+    await model.CartItem.findByIdAndUpdate(cartId, { $push: { orders: orderDoc._id } });
 
     return saveOrder;
   })
