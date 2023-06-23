@@ -5,10 +5,6 @@ const model = require('../model/index.js');
 
 const createProduct = errorHandler(
   withTransactions(async (req, res, session) => {
-    const {
-      params: { id: cartId },
-    } = req;
-
     const productDocs = new model.Product({ ...req.body });
     const savedProduct = await productDocs.save({ session });
     return savedProduct;
