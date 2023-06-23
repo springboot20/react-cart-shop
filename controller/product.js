@@ -1,62 +1,80 @@
-const { errorHandler, withTransactions } = require("../error")
-const model = require("../model/index.js")
+/** @format */
 
-const createProduct = errorHandler(withTransactions(async (req, res, session) => {
-    const productDocs = new model.Product({ ...req.body })
-    await productDocs.save({ session })
+const { errorHandler, withTransactions } = require('../error');
+const model = require('../model/index.js');
 
-    return productDocs
-}))
+const createProduct = errorHandler(
+  withTransactions(async (req, res, session) => {
+    const {
+      params: { id: cartId },
+    } = req;
+
+    const productDocs = new model.Product({ ...req.body });
+    const savedProduct = await productDocs.save({ session });
+    await model.CartItem.findByIdAndUpdate(cartId, { $push: { products: productDocs._id } });
+
+    return savedProduct;
+  })
+);
 
 const getAllProducts = errorHandler(async (req, res, next) => {
-    const products = await model.Product.find().sort("createdAt")
-    return products
-})
+  const products = await model.Product.find().sort('createdAt');
+  return products;
+});
 
 const getProductsByType = errorHandler(async (req, res, next) => {
-    const productsType = req.query.productsType.split(",")
+  const productsType = req.query.productsType.split(',');
 
-    const productDoc = await Promise.all(productsType.map((type) => {
-        return model.Product.find({
-            productType: type
-        })
-    }))
+  const productDoc = await Promise.all(
+    productsType.map((type) => {
+      return model.Product.find({
+        productType: type,
+      });
+    })
+  );
 
-    return productDoc
-})
+  return productDoc;
+});
 
-const updateProduct = errorHandler(withTransactions(async (req, res, session) => {
-    const { params: { id: productId } } = req
+const updateProduct = errorHandler(
+  withTransactions(async (req, res, session) => {
+    const {
+      params: { id: productId },
+    } = req;
 
-    const productDoc = await model.Product.findOneAndUpdate({ _id: productId }, req.body, { new: true })
+    const productDoc = await model.Product.findOneAndUpdate({ _id: productId }, req.body, { new: true });
 
-    await productDoc.save({ session })
-    return productDoc
-
-}))
+    await productDoc.save({ session });
+    return productDoc;
+  })
+);
 
 const deleteProduct = errorHandler(async (req, res, next) => {
-    const { params: { id: productId } } = req
+  const {
+    params: { id: productId },
+  } = req;
 
-    const productDoc = await model.Product.findOneAndDelete({
-        _id: productId,
-    })
+  const productDoc = await model.Product.findOneAndDelete({
+    _id: productId,
+  });
 
-    return productDoc
-})
+  return productDoc;
+});
 
 const getProduct = errorHandler(async (req, res, next) => {
-    const { params: { id: productId } } = req
+  const {
+    params: { id: productId },
+  } = req;
 
-    const productDoc = await model.Product.findById(productId)
-    return productDoc
-})
+  const productDoc = await model.Product.findById(productId);
+  return productDoc;
+});
 
 module.exports = {
-    createProduct,
-    getAllProducts,
-    getProduct,
-    getProductsByType,
-    updateProduct,
-    deleteProduct
-}
+  createProduct,
+  getAllProducts,
+  getProduct,
+  getProductsByType,
+  updateProduct,
+  deleteProduct,
+};

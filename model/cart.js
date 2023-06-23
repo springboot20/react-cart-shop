@@ -25,7 +25,7 @@ const cartSchema = new Schema({
     type: Number,
     require: true,
   },
-  orders:[String]
+  products: [String],
 });
 
 const CartItem = model('CartItem', cartSchema);

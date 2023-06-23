@@ -15,23 +15,19 @@ const getOrder = errorHandler(async (req, res, next) => {
   } = req;
   req.body.checkBy = req.user.userId;
 
-  const orderDoc = await model.Order.findOne({ _id: orderId }).populate('cartItems').exec();
+  const orderDoc = await model.Order.findById(orderId);
 
   return orderDoc;
 });
 
 const makeOrder = errorHandler(
   withTransactions(async (req, res, session) => {
-    const {
-      params: { id: cartId },
-    } = req;
     req.body.checkBy = req.user.userId;
 
     const orderDoc = new model.Order(req.body);
-    const saveOrder = await orderDoc.save({ session });
-    await model.CartItem.findByIdAndUpdate(cartId, { $push: { orders: orderDoc._id } });
+    await orderDoc.save({ session });
 
-    return saveOrder;
+    return orderDoc;
   })
 );
 
