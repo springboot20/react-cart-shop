@@ -39,7 +39,6 @@ const productSchema = new Schema(
       min: 0,
       max: 5,
     },
-    cartItems: [String],
   },
   { timestamps: true }
 );

@@ -11,8 +11,6 @@ const createProduct = errorHandler(
 
     const productDocs = new model.Product({ ...req.body });
     const savedProduct = await productDocs.save({ session });
-    await model.CartItem.findByIdAndUpdate(cartId, { $push: { products: productDocs._id } });
-
     return savedProduct;
   })
 );
@@ -50,16 +48,7 @@ const updateProduct = errorHandler(
 );
 
 const deleteProduct = errorHandler(async (req, res, next) => {
-  const {
-    params: { id: cartId },
-  } = req;
-
   const productDoc = await model.Product.findByIdAndDelete(req.params.id);
-  try {
-    await model.Cart.findByIdAndUpdate(cartId, { $pull: { products: req.params.id } });
-  } catch (error) {
-    throw new HTTPError(409, error.message);
-  }
   return productDoc;
 });
 

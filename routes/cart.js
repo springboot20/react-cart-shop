@@ -1,10 +1,10 @@
 const router = require("express").Router()
 const { addToCart, getAllCart, deleteCartItem, updateCartItem } = require("../controller/cart")
-const { isAdmin } = require("../utils/auth")
+const { auth } = require("../utils/auth")
 
 router.get("/", getAllCart)
-router.post("/:id", isAdmin, addToCart)
-router.patch("/:id", isAdmin, updateCartItem)
-router.delete("/:id", isAdmin, deleteCartItem)
+router.post("/:id", auth, addToCart)
+router.patch("/:id", auth, updateCartItem)
+router.delete("/:id", auth, deleteCartItem)
 
 module.exports = router
