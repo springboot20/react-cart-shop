@@ -7,7 +7,6 @@ import { Route, Routes } from 'react-router';
 import Home from './components/pages/Home';
 import { AuthProvider } from './components/util/AuthContext';
 import Product from './components/pages/Product';
-import { ActiveContext } from './components/context/ActiveContext';
 import { CartProvider } from './components/context/product/CartContext';
 import CheckOut from './components/pages/CheckOut';
 import Products from './components/pages/Products';
@@ -20,7 +19,6 @@ const App = () => {
   return (
     <Fragment>
       <AuthProvider>
-        <ActiveContext>
           <CartProvider>
             <ToastContainer />
             <Routes>
@@ -62,7 +60,6 @@ const App = () => {
               <Route path='*' element={<NotFound />} />
             </Routes>
           </CartProvider>
-        </ActiveContext>
       </AuthProvider>
     </Fragment>
   );

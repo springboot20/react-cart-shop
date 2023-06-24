@@ -6,7 +6,7 @@ import { Axios } from '../../Api/Axios';
 
 const UserContext = createContext({
   user: {},
-  token: {},
+  isLoggedIn: false,
 });
 
 export const UserProvider = ({ children }) => {
