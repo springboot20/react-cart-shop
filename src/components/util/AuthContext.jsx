@@ -6,12 +6,12 @@ import jwt_decode from 'jwt-decode';
 
 const AuthContext = createContext({
   auth: {},
-  user: {},
+  token: null,
   isLoggedIn: false,
   signUpError: null,
   signInError: null,
-  signUp: async () => {},
-  signIn: async () => {},
+  signUp: async (newUser) => {},
+  signIn: async (email, password) => {},
   logOut: async () => {},
 });
 
@@ -20,8 +20,6 @@ export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState(localStorage.getItem('tokens') ? jwt_decode(localStorage.getItem('tokens')) : null);
   const [signUpError, setSignUpError] = useState('');
   const [signInError, setSignInError] = useState('');
-  const [user, setUser] = useState({});
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const signUp = async (newUser) => {
     try {
@@ -74,28 +72,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    async function fetchMe() {
-      try {
-        const response = await Axios.get('/users/auth/me', {
-          headers: {
-            Authorization: `Bearer ${token?.accessToken}`,
-          },
-        });
-        setUser(response.data);
-        setIsLoggedIn(true);
-
-        return response.data;
-      } catch (error) {
-        setIsLoggedIn(false);
-        console.log(error);
-      }
-    }
-    fetchMe();
-  }, [token?.accessToken, setUser]);
-  
-  useEffect(() => {
     // let minutes = 4 * 60 * 60 * 1000; // 4 minutes
-    let seconds = 60 * 60 * 1000; 
+    let seconds = 60 * 60 * 1000;
     const persistToken = async () => {
       try {
         const response = await Axios.post(
@@ -119,7 +97,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     const interval = setInterval(() => {
-      console.log(seconds)
+      console.log(seconds);
       persistToken();
     }, seconds);
     return () => {
@@ -127,7 +105,7 @@ export const AuthProvider = ({ children }) => {
     };
   }, [token?.refreshToken, setToken, token?.accessToken]);
 
-  return <AuthContext.Provider value={{ user, auth, isLoggedIn, signInError, signUpError, signUp, signIn, logOut }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ auth, token, signInError, signUpError, signUp, signIn, logOut }}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {
