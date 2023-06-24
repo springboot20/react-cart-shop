@@ -58,14 +58,7 @@ const App = () => {
                 </RequireAuth>
               }
             />
-            <Route
-              path='/profile'
-              element={
-                <RequireAuth>
-                  <Profile />
-                </RequireAuth>
-              }
-            />
+            <Route path='/profile' element={<Profile />} />
             <Route path='*' element={<NotFound />} />
           </Routes>
         </CartProvider>
