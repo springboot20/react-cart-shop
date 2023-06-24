@@ -9,7 +9,11 @@ const Profile = () => {
   return (
     <div>
       <MainNav />
-      <ProfileForm />
+      <section className='mt-24'>
+        <div className='container grid grid-cols-7'>
+          <ProfileForm />
+        </div>
+      </section>
       <Footer />
     </div>
   );

@@ -41,21 +41,28 @@ const Signup = () => {
   const { values, handleSubmit, handleBlur, handleChange, touched, errors, isSubmitting } = useFormik({
     initialValues,
     validationSchema: basicSchema,
-    onSubmit: onSubmit,
+    onSubmit: async (values) => {
+      console.log(values);
+      if (values) {
+        const { streetAddress, city, state, zipCode, ...rest } = values;
+        await signUp({
+          ...rest,
+          address: {
+            streetAddress,
+            city,
+            state,
+            zipCode,
+          },
+        });
+        toast.success('You have successfully signed in...');
+
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+        navigate('/signin', { replace: true });
+      } else {
+        toast.error(signUpError);
+      }
+    },
   });
-
-  async function onSubmit() {
-    if (values) {
-      await signUp(values);
-      toast.success('You have successfully signed in...');
-
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      navigate('/signin', { replace: true });
-    } else {
-      toast.error(signUpError);
-    }
-  }
-
   return (
     <div className='container mx-auto px-12 max-w-[86rem] lg:max-w-7xl xl:max-w-[95rem] 2xl:max-w-[110rem] mb-16'>
       <form onSubmit={handleSubmit} className='flex-shrink-0 max-w-6xl mx-auto bg-white rounded-lg mt-32'>
@@ -197,7 +204,7 @@ const Signup = () => {
 
         <div className='mt-6'>
           <button type='submit' disabled={isSubmitting} className='rounded-md w-full bg-indigo-600 px-3 py-3 text-xl font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>
-           { isSubmitting ?<span>Signing up...</span>:  <span>Sign up</span> }
+            {isSubmitting ? <span>Signing up...</span> : <span>Sign up</span>}
           </button>
         </div>
         <p className='mt-4 text-xl font-semibold'>
