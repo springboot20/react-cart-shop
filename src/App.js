@@ -14,52 +14,61 @@ import NotFound from './components/components/notFound/NotFound';
 import RequireAuth from './components/util/RequireAuth';
 import Cart from './components/pages/Cart';
 import { ToastContainer } from 'react-toastify';
+import Profile from './components/pages/Profile';
 
 const App = () => {
   return (
     <Fragment>
       <AuthProvider>
-          <CartProvider>
-            <ToastContainer />
-            <Routes>
-              <Route path='/' element={<Home />} />
-              <Route path='/signup' element={<SignUp />} />
-              <Route path='/signin' element={<SignIn />} />
-              <Route
-                path='/products'
-                element={
-                  <RequireAuth>
-                    <Products />
-                  </RequireAuth>
-                }
-              />
-              <Route
-                path='/products/:id'
-                element={
-                  <RequireAuth>
-                    <Product />
-                  </RequireAuth>
-                }
-              />
-              <Route
-                path='/check-out'
-                element={
-                  <RequireAuth>
-                    <CheckOut />
-                  </RequireAuth>
-                }
-              />
-              <Route
-                path='/cart'
-                element={
-                  <RequireAuth>
-                    <Cart />
-                  </RequireAuth>
-                }
-              />
-              <Route path='*' element={<NotFound />} />
-            </Routes>
-          </CartProvider>
+        <CartProvider>
+          <ToastContainer />
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/signup' element={<SignUp />} />
+            <Route path='/signin' element={<SignIn />} />
+            <Route
+              path='/products'
+              element={
+                <RequireAuth>
+                  <Products />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path='/products/:id'
+              element={
+                <RequireAuth>
+                  <Product />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path='/check-out'
+              element={
+                <RequireAuth>
+                  <CheckOut />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path='/cart'
+              element={
+                <RequireAuth>
+                  <Cart />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path='/profile'
+              element={
+                <RequireAuth>
+                  <Profile />
+                </RequireAuth>
+              }
+            />
+            <Route path='*' element={<NotFound />} />
+          </Routes>
+        </CartProvider>
       </AuthProvider>
     </Fragment>
   );
