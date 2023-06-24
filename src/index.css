@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#ecf0f3] relative;
+  }
+
+  img {
+    vertical-align: middle;
+  }
+}
+@layer components {
+  .logo-name {
+    @apply text-2xl ml-4 font-semibold text-white;
+  }
+
+  /* CAROUSEL STYLING */
+  .carousel {
+    @apply max-w-[1600px];
+  }
+
+  .carousel-item {
+    @apply h-[70vh] w-full float-left relative mr-[-100%];
+  }
+
+  .carousel-btn {
+    @apply cursor-pointer absolute top-0 bottom-0 z-[1] flex items-center w-[15%] justify-center text-gray-800 text-center transition-all;
+  }
+
+  #next-btn {
+    @apply right-0;
+  }
+
+  .carousel-btn .next-icon,
+  .carousel-btn .prev-icon {
+    @apply w-10 h-10;
+  }
+
+  /* FORM STYLINGS */
+  form {
+    @apply p-5 md:p-7;
+  }
+
+  /* PRODUCT STYLES */
+  .product-container .product-card {
+    @apply bg-white overflow-hidden rounded-md shadow-md;
+  }
+
+  .product-card .product-card-body {
+    @apply mt-4 flex justify-between;
+  }
+
+  .product-card .product-image {
+    @apply aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80;
+  }
+
+  .product-image img {
+    @apply object-cover object-center w-full h-[22rem] transition-all hover:scale-105;
+  }
+
+  .product-card .product-card-body p {
+    @apply mt-3;
+  }
+
+  .product-card .product-card-body button.cart-btn {
+    @apply py-3 px-6 bg-violet-600 rounded-md mt-6 w-full active:scale-50 transition-all delay-100 hover:scale-105;
+  }
+
+  .skeleton {
+    @apply bg-gradient-to-tl from-slate-300 to-slate-200;
+    background-position: left -40px top 0;
+    animation: shine 2.5s ease infinite;
+    @apply bg-no-repeat bg-slate-300;
+  }
+
+  @keyframes shine {
+    to {
+      background-position: right -400px top 0;
+    }
+  }
+}
