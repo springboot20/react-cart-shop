@@ -27,9 +27,6 @@ module.exports = withMT({
       alabaster: '#fafbff',
       ...colors,
     },
-    fontFamily: {
-      ubuntu: 'Ubuntu',
-    },
     extend: {},
   },
   plugins: [require('autoprefixer'), require('@tailwindcss/aspect-ratio'), require('@tailwindcss/forms')],
