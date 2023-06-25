@@ -37,12 +37,10 @@ export const AuthProvider = ({ children }) => {
         password,
       });
 
-      setAuth(jwt_decode(response.data.accessToken, { header: true }));
+      setAuth(response.data.accessToken);
       setToken(response.data);
-      localStorage.setItem('tokens', JSON.stringify(response.data));
 
-      console.log(response.data);
-      return response.data;
+      localStorage.setItem('tokens', JSON.stringify(response.data));
     } catch (error) {
       if (error) {
         setSignInError(error.message);
@@ -84,8 +82,8 @@ export const AuthProvider = ({ children }) => {
           }
         );
 
-        setToken(response.data);
-        setAuth(jwt_decode(response.data.token.accessToken, { header: true }));
+        setToken(response.data.token);
+        setAuth(response.data.accessToken);
         localStorage.setItem('tokens', JSON.stringify(response.data));
 
         return response.data;

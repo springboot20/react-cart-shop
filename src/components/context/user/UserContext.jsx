@@ -38,8 +38,6 @@ export const UserProvider = ({ children }) => {
         });
         setUser(response.data);
         setIsLoggedIn(true);
-
-        return response.data;
       } catch (error) {
         setIsLoggedIn(false);
         console.log(error);
