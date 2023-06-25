@@ -3,6 +3,7 @@
 import React, { useContext, createContext, useEffect, useState } from 'react';
 import { useAuth } from '../../util/AuthContext';
 import { Axios } from '../../Api/Axios';
+import jwt_decode from 'jwt-decode';
 
 const UserContext = createContext({
   user: {},
@@ -17,6 +18,19 @@ export const UserProvider = ({ children }) => {
   useEffect(() => {
     async function fetchMe() {
       try {
+        if (!token) {
+          setIsLoggedIn(false);
+          return;
+        }
+
+        const decodedToken = jwt_decode(token?.accessToken);
+        const expirationTime = decodedToken?.exp;
+
+        if (Date.now() >= expirationTime * 1000) {
+          setIsLoggedIn(false);
+          return;
+        }
+
         const response = await Axios.get('/users/auth/me', {
           headers: {
             Authorization: `Bearer ${token?.accessToken}`,
@@ -32,7 +46,7 @@ export const UserProvider = ({ children }) => {
       }
     }
     fetchMe();
-  }, [token?.accessToken, setUser]);
+  }, [token?.accessToken, setUser, token]);
 
   return <UserContext.Provider value={{ user, isLoggedIn }}>{children}</UserContext.Provider>;
 };
