@@ -8,6 +8,7 @@ import { useAuth } from '../../util/AuthContext';
 import IconType from '../icon/IconType';
 import { faCartPlus } from '@fortawesome/free-solid-svg-icons';
 import { useCart } from '../../context/product/CartContext';
+import { useUser } from '../../context/user/UserContext';
 
 const navigation = [
   { to: '/', name: 'Home', current: true },
@@ -25,6 +26,7 @@ const handleActive = ({ isActive }) => {
 
 export default function Example() {
   const { logOut, auth } = useAuth();
+  const { isLoggedIn } = useUser();
   const { cartItems } = useCart();
   const navigate = useNavigate();
 
@@ -65,7 +67,7 @@ export default function Example() {
               </div>
 
               <div className='absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0'>
-                {auth && (
+                {(auth || isLoggedIn) && (
                   <div className='hidden sm:ml-6 sm:block'>
                     <NavLink to='/cart' className='sm:ml-6 flex items-center px-4 py-3 text-sm text-white hover:bg-slate-700 rounded-md transition-all bg-gray-900 lg:mr-6 '>
                       <div className='flex'>
@@ -76,15 +78,6 @@ export default function Example() {
                     </NavLink>
                   </div>
                 )}
-
-                {!auth && (
-                  <div className='hidden sm:block sm:ml-2 px-5 py-3 text-sm text-white hover:bg-slate-700 rounded-md transition-all bg-gray-800 lg:mr-6'>
-                    <Link to='/signin' className='font-semibold text-center block'>
-                      Sign In
-                    </Link>
-                  </div>
-                )}
-
                 {!auth && (
                   <div className='hidden sm:block sm:ml-2 px-5 py-3 text-sm text-white hover:bg-violet-700 rounded-md transition-all bg-violet-800 lg:mr-6'>
                     <Link to='/signup' className='font-semibold text-center block'>
@@ -92,8 +85,14 @@ export default function Example() {
                     </Link>
                   </div>
                 )}
-
-                {auth && (
+                {(!auth || isLoggedIn) && (
+                  <div className='hidden sm:block sm:ml-2 px-5 py-3 text-sm text-white hover:bg-slate-700 rounded-md transition-all bg-gray-800 lg:mr-6'>
+                    <Link to='/signin' className='font-semibold text-center block'>
+                      Sign In
+                    </Link>
+                  </div>
+                )}
+                {(auth || isLoggedIn) && (
                   <>
                     <button type='button' className='rounded-full mr-4 bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800'>
                       <span className='sr-only'>View notifications</span>
@@ -142,7 +141,6 @@ export default function Example() {
               </div>
             </div>
           </div>
-
           <Disclosure.Panel className='sm:hidden'>
             <div className='space-y-3 px-2 pb-3 pt-2'>
               {navigation.map((item) => (
@@ -151,7 +149,7 @@ export default function Example() {
                 </NavLink>
               ))}
 
-              {auth && (
+              {(auth || isLoggedIn) && (
                 <div className='flex items-center px-4 py-2 text-sm text-white hover:bg-slate-700 p-3 rounded-md transition-all bg-gray-800 lg:mr-6'>
                   <NavLink to='/cart' className='flex'>
                     <p className='text-xl font-semibold'>Cart</p>
@@ -168,7 +166,7 @@ export default function Example() {
                   </Link>
                 </div>
               )}
-              {!auth && (
+              {(!auth || isLoggedIn) && (
                 <div className='px-4 py-2 text-sm text-white hover:bg-slate-700 p-3 rounded-md transition-all bg-gray-800 lg:mr-6'>
                   <Link to='/signin' className='text-xl font-semibold text-center block'>
                     Sign In
