@@ -23,7 +23,7 @@ const currentYear = new Date().getFullYear();
 
 const Footer = () => {
   return (
-    <footer className='relative w-full mt-12 bg-gray-800 '>
+    <footer className='relative w-full bg-gray-800 my-auto'>
       <div className='mx-auto w-full max-w-7xl px-8 py-3'>
         <div className='grid grid-cols-1 justify-between gap-4 md:grid-cols-2'>
           <div className='flex items-center justify-center md:justify-start space-x-5'>

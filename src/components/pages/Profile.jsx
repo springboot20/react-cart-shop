@@ -1,21 +1,19 @@
 /** @format */
 
 import React from 'react';
-import MainNav from '../components/Navbar/MainNav';
-import Footer from '../components/footer/Footer';
 import ProfileForm from '../components/profile/ProfileForm';
+import SideNav from '../components/Navbar/SideNav';
+import MainNav from '../components/Navbar/MainNav';
 
 const Profile = () => {
   return (
-    <div>
+    <>
       <MainNav />
-      <section className='mt-24'>
-        <div className='container grid grid-cols-7'>
-          <ProfileForm />
-        </div>
+      <section className='mt-24 mx-auto max-w-7xl lg:max-w-[95rem]'>
+        <SideNav />
+        <ProfileForm />
       </section>
-      <Footer />
-    </div>
+    </>
   );
 };
 
