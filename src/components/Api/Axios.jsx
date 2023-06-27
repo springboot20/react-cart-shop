@@ -32,6 +32,8 @@ Axios.interceptors.response.use(
       const tokens = JSON.parse(localStorage.getItem('tokens'));
       const newTokens = await axios.post('/users/auth/access', { refreshToken: tokens?.refreshToken });
       localStorage.setItem('tokens', JSON.stringify(newTokens));
+
+      console.log(localStorage.setItem('tokens', JSON.stringify(newTokens)))
     }
     return;
   }
