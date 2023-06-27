@@ -68,6 +68,8 @@ const signUp = errorHandler(
     const { password, state, streetAddress, city, zipCode, ...rest } = req.body;
     const hashedPassword = await bcrypt.hash(password, 12);
 
+    console.log(rest);
+
     const userDoc = new model.User({
       ...rest,
       address: {
