@@ -29,6 +29,18 @@ Axios.interceptors.response.use(
   async (error) => {
     if (error.response.status === 401) {
       const tokens = JSON.parse(localStorage.getItem('tokens'));
+      const newTokens = await axios.post('/users/auth/access', { refreshToken: tokens?.refreshToken });
+      localStorage.setItem('tokens', JSON.stringify(newTokens));
+    }
+    return;
+  }
+);
+
+Axios.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response.status === 401) {
+      const tokens = JSON.parse(localStorage.getItem('tokens'));
       const newTokens = await axios.post('/users/auth/refresh', { refreshToken: tokens?.refreshToken });
       localStorage.setItem('tokens', JSON.stringify(newTokens));
     }

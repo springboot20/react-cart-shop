@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useContext, createContext, useState, useEffect } from 'react';
+import React, { useContext, createContext, useState } from 'react';
 import { Axios } from '../Api/Axios';
 import jwt_decode from 'jwt-decode';
 
@@ -50,13 +50,7 @@ export const AuthProvider = ({ children }) => {
 
   const logOut = async () => {
     try {
-      const response = await Axios.post(
-        '/users/auth/logout',
-        { refreshToken: token?.refreshToken },
-        {
-          headers: { Authorization: `Bearer ${token?.accessToken}` },
-        }
-      );
+      const response = await Axios.post('/users/auth/logout', { refreshToken: token?.refreshToken });
       setToken(null);
       setAuth(null);
 

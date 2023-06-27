@@ -33,8 +33,11 @@ const CartCard = ({ cartItems }) => {
               <p className='text-gray-500'>Qty {quantity}</p>
 
               <div className='flex'>
-                <Button type='button' className='font-medium text-indigo-600 hover:text-indigo-500'>
+                <Button type='button' className='font-medium text-red-600 hover:text-red-500'>
                   <IconType iconType={faTrashAlt} />
+                </Button>
+                <Button type='button' className='font-medium text-indigo-600 hover:text-indigo-500'>
+                  <IconType iconType={faEdit} />
                 </Button>
               </div>
             </div>
