@@ -35,10 +35,10 @@ const Cart = () => {
                     </Link>
                   </div>
                 ) : (
-                  <div className='space-y-4'>
-                    {cartItems.map(({ _id, ...rest }) => (
-                      <CartCard key={_id} {...rest} />
-                    ))}
+                  <div className='mt-8'>
+                    <div className='flow-root'>
+                    <CartCard cartItems={cartItems}/>
+                    </div>
                   </div>
                 )}
               </div>

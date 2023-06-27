@@ -69,40 +69,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
-    // let minutes = 4 * 60 * 60 * 1000; // 4 minutes
-    let seconds = 60 * 60 * 1000;
-    const persistToken = async () => {
-      try {
-        const response = await Axios.post(
-          '/users/auth/refresh-token',
-          { refreshToken: token?.refreshToken },
-          {
-            headers: { Authorization: `Bearer ${token?.accessToken}` },
-          }
-        );
-
-        setToken(response.data.token);
-        setAuth(response.data.accessToken);
-        localStorage.setItem('tokens', JSON.stringify(response.data));
-
-        return response.data;
-      } catch (error) {
-        if (error) {
-          console.log(error.message);
-        }
-      }
-    };
-
-    const interval = setInterval(() => {
-      console.log(seconds);
-      persistToken();
-    }, seconds);
-    return () => {
-      clearInterval(interval);
-    };
-  }, [token?.refreshToken, setToken, token?.accessToken]);
-
   return <AuthContext.Provider value={{ auth, token, signInError, signUpError, signUp, signIn, logOut }}>{children}</AuthContext.Provider>;
 };
 

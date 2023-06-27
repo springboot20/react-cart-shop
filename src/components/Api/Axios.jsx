@@ -1,3 +1,5 @@
+/** @format */
+
 import axios from 'axios';
 
 export const Axios = axios.create({
@@ -12,14 +14,24 @@ Axios.interceptors.request.use(
   (config) => {
     const tokens = JSON.parse(localStorage.getItem('tokens'));
     const accessToken = tokens?.accessToken; // use optional chaining to avoid TypeError
-    const refreshToken = tokens?.refreshToken; // use optional chaining to avoid TypeError
     if (accessToken) {
       config.headers['Authorization'] = `Bearer ${accessToken}`;
-      config.headers['Refresh-Token'] = `Bearer ${refreshToken}`;
     }
     return config;
   },
   (error) => {
     return Promise.reject(error);
+  }
+);
+
+Axios.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response.status === 401) {
+      const tokens = JSON.parse(localStorage.getItem('tokens'));
+      const newTokens = await axios.post('/users/auth/refresh', { refreshToken: tokens?.refreshToken });
+      localStorage.setItem('tokens', JSON.stringify(newTokens));
+    }
+    return;
   }
 );

@@ -1,3 +1,9 @@
+/**
+ * eslint-disable jsx-a11y/no-redundant-roles
+ *
+ * @format
+ */
+
 /** @format */
 
 import React from 'react';
@@ -6,28 +12,36 @@ import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { formatPrice } from './CardList';
 import Button from '../icon/Button';
 
-const CartCard = (props) => {
-  const { productName, quantity, price, imageUrl } = props;
-
+const CartCard = ({ cartItems }) => {
   return (
-    <div className='px-5 py-4 bg-white border rounded-lg flex space-x-5 items-center justify-between'>
-      <div className='space-x-3 flex items-center'>
-        <img src={imageUrl} alt='' className='h-24 w-24 rounded-full block object-contain' />
-        <div className='space-y-4'>
-          <h3 className='text-gray-800 text-3xl font-semibold'>{productName}</h3>
-          <p className='font-ubuntu text-xl font-medium italic text-gray-800'>{formatPrice(price)}</p>
-          <span className='font-ubuntu text-gray-800 text-xl font-semibold'>{quantity}</span>
-        </div>
-      </div>
-      <div className='flex items-center space-x-2'>
-        <Button type="button" className="">
-          <IconType iconType={faEdit}  className="h-7 w-7 text-gary-600"/>
-        </Button>
-        <Button type="button" className="">
-          <IconType iconType={faTrashAlt}  className="h-7 w-7 text-red-600"/>
-        </Button>
-      </div>
-    </div>
+    // eslint-disable-next-line jsx-a11y/no-redundant-roles
+    <ul role='list' className='-my-6 divide-y divide-gray-200'>
+      {cartItems.map(({ productName, quantity, price, imageUrl, _id }) => (
+        <li key={_id} className='flex py-6'>
+          <div className='h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200'>
+            <img src={imageUrl} alt={''} className='h-full w-full object-cover object-center' />
+          </div>
+
+          <div className='ml-4 flex flex-1 flex-col'>
+            <div>
+              <div className='flex justify-between text-base font-medium text-gray-900'>
+                <h3 className='text-gray-800 font-semibold text-xl'>{productName}</h3>
+                <p className='ml-4'>{formatPrice(price)}</p>
+              </div>
+            </div>
+            <div className='flex flex-1 items-end justify-between text-sm'>
+              <p className='text-gray-500'>Qty {quantity}</p>
+
+              <div className='flex'>
+                <Button type='button' className='font-medium text-indigo-600 hover:text-indigo-500'>
+                  <IconType iconType={faTrashAlt} />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </li>
+      ))}
+    </ul>
   );
 };
 
