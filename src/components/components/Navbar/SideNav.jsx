@@ -9,13 +9,12 @@ import { useNavigate } from 'react-router';
 const SideNav = () => {
   const { logOut } = useAuth();
   const navigate = useNavigate();
-
   const handlelogout = async () => {
     await logOut();
     navigate('/signin', { replace: true });
   };
   return (
-    <Card className='fixed top-20 h-[calc(100vh-5rem)] w-full max-w-[30rem] bg-transparent shadow-none p-4 border-r border-r-gray-800/20'>
+    <Card className='fixed top-20 h-[calc(100vh-5rem)] w-full z-20 rounded-none max-w-[25rem] lg:max-w-[35rem] shadow-none p-4 border-r border-r-gray-800/20'>
       <List>
         <ListItem>
           <ListItemPrefix>

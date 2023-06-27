@@ -9,7 +9,7 @@ const Profile = () => {
   return (
     <>
       <MainNav />
-      <section className='mt-24 mx-auto max-w-7xl lg:max-w-[95rem]'>
+      <section className='mt-24'>
         <SideNav />
         <ProfileForm />
       </section>

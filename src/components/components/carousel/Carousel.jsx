@@ -5,7 +5,7 @@ import { Carousel, Typography, Button } from '@material-tailwind/react';
 
 const CarouselSlide = () => {
   return (
-    <Carousel className='mt-24'>
+    <Carousel className='mt-20'>
       <div className='relative h-[60vh] w-full'>
         <img
           src='https://media.istockphoto.com/id/1397686129/photo/stylish-womens-bag-and-different-stuff-on-pale-orange-background-top-view.webp?b=1&s=170667a&w=0&k=20&c=ZoogkY5Alm0snb0OjTvjr4rKxYkVoztvtg7cspWpajw='
