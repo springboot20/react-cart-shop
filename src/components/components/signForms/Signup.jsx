@@ -41,28 +41,29 @@ const Signup = () => {
   const { values, handleSubmit, handleBlur, handleChange, touched, errors, isSubmitting } = useFormik({
     initialValues,
     validationSchema: basicSchema,
-    onSubmit: async (values) => {
-      console.log(values);
-      if (values) {
-        const { streetAddress, city, state, zipCode, ...rest } = values;
-        await signUp({
-          ...rest,
-          address: {
-            streetAddress,
-            city,
-            state,
-            zipCode,
-          },
-        });
-        toast.success('You have successfully signed in...');
-
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-        navigate('/signin', { replace: true });
-      } else {
-        toast.error(signUpError);
-      }
-    },
+    onSubmit: onSubmit,
   });
+
+  async function onSubmit() {
+    if (values) {
+      const { streetAddress, city, state, zipCode, ...rest } = values;
+      await signUp({
+        ...rest,
+        address: {
+          streetAddress,
+          city,
+          state,
+          zipCode,
+        },
+      });
+      toast.success('You have successfully signed up...');
+
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      navigate('/signin', { replace: true });
+    } else {
+      toast.error(signUpError);
+    }
+  }
   return (
     <div className='container mx-auto px-12 max-w-[86rem] lg:max-w-7xl xl:max-w-[95rem] 2xl:max-w-[110rem] mb-16'>
       <form onSubmit={handleSubmit} className='flex-shrink-0 max-w-6xl mx-auto bg-white rounded-lg mt-32'>
