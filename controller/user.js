@@ -65,10 +65,19 @@ const newAccessToken = errorHandler(async (req, res, session) => {
 
 const signUp = errorHandler(
   withTransactions(async (req, res, session) => {
-    const { id, password, ...rest } = req.body;
+    const { password, state, streetAddress, city, zipCode, ...rest } = req.body;
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    const userDoc = new model.User({ ...rest, password: hashedPassword });
+    const userDoc = new model.User({
+      ...rest,
+      address: {
+        state,
+        streetAddress,
+        city,
+        zipCode,
+      },
+      password: hashedPassword,
+    });
 
     const refreshDoc = new model.RefreshToken({ userId: userDoc.id });
 
@@ -118,10 +127,7 @@ const logOut = errorHandler(
 
 const updateUser = errorHandler(
   withTransactions(async (req, res, session) => {
-    const {
-      params: { id: user },
-    } = req;
-    const userDoc = await model.User.findOneAndUpdate({ _id: user }, { $set: req.body }, { new: true });
+    const userDoc = await model.User.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
     await userDoc.save({ session });
 
     return userDoc;

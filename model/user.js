@@ -1,49 +1,65 @@
-const mongoose = require("mongoose")
-const { Schema, model } = mongoose
+/** @format */
 
-const userSchema = new Schema({
+const mongoose = require('mongoose');
+const { Schema, model } = mongoose;
+
+const userSchema = new Schema(
+  {
     firstName: {
-        type: String,
-        require: true,
-        default: null
-    }, lastName: {
-        type: String,
-        require: true,
-        default: null
-    }, email: {
+      type: String,
+      require: true,
+      default: null,
+    },
+    lastName: {
+      type: String,
+      require: true,
+      default: null,
+    },
+    email: {
+      type: String,
+      require: true,
+      default: null,
+      unique: true,
+    },
+    password: {
+      type: String,
+      require: true,
+      default: null,
+    },
+    country: {
+      type: String,
+      require: true,
+      default: null,
+    },
+    address: {
+      state: {
         type: String,
         require: true,
         default: null,
-        unique: true
-    }, password: {
+      },
+      streetAddress: {
         type: String,
         require: true,
-        default: null
-    }, state: {
+        default: null,
+      },
+      city: {
         type: String,
         require: true,
-        default: null
-    }, country: {
-        type: String,
-        require: true,
-        default: null
-    }, streetAddress: {
-        type: String,
-        require: true,
-        default: null
-    }, city: {
-        type: String,
-        require: true,
-        default: null
-    }, zipCode: {
+        default: null,
+      },
+      zipCode: {
         type: Number,
         require: true,
-        default: null
-    }, isAdmin: {
-        type: Boolean,
-        default: false
-    }
-}, { timestamps: true })
+        default: null,
+      },
+    },
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  { timestamps: true }
+);
 
-const User = model("User", userSchema)
-module.exports = User
+const User = model('User', userSchema);
+module.exports = User;
