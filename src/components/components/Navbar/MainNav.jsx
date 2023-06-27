@@ -1,6 +1,6 @@
 /** @format */
 
-import { Fragment, useState } from 'react';
+import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
@@ -9,7 +9,6 @@ import IconType from '../icon/IconType';
 import { faCartPlus } from '@fortawesome/free-solid-svg-icons';
 import { useCart } from '../../context/product/CartContext';
 import { useUser } from '../../context/user/UserContext';
-import InputField from '../inputField/InputField';
 
 const navigation = [
   { to: '/', name: 'Home', current: true },
