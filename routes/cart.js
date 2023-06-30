@@ -1,10 +1,12 @@
-const router = require("express").Router()
-const { addToCart, getAllCart, deleteCartItem, updateCartItem } = require("../controller/cart")
-const { auth } = require("../utils/auth")
+/** @format */
 
-router.get("/", getAllCart)
-router.post("/:id", auth, addToCart)
-router.patch("/:id", auth, updateCartItem)
-router.delete("/:id", auth, deleteCartItem)
+const router = require('express').Router();
+const { addToCart, getAllCart, deleteCartItem, updateCartItem } = require('../controller/cart');
+const { auth } = require('../utils/auth');
 
-module.exports = router
+router.get('/', getAllCart);
+router.post('/', auth, addToCart);
+router.patch('/:id', auth, updateCartItem);
+router.delete('/:id', auth, deleteCartItem);
+
+module.exports = router;

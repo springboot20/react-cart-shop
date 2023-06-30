@@ -1,11 +1,11 @@
 /** @format */
 
-const { errorHandler, withTransactions, HTTPError } = require('../error');
+const { errorHandler, withTransactions } = require('../error');
 const model = require('../model/index.js');
 
 const createProduct = errorHandler(
   withTransactions(async (req, res, session) => {
-    const productDocs = new model.Product({ ...req.body });
+    const productDocs = new model.Product(req.body);
     const savedProduct = await productDocs.save({ session });
     return savedProduct;
   })
@@ -36,7 +36,7 @@ const updateProduct = errorHandler(
       params: { id: productId },
     } = req;
 
-    const productDoc = await model.Product.findOneAndUpdate({ _id: productId }, req.body, { new: true });
+    const productDoc = await model.Product.findByIdAndUpdate(productId, req.body, { new: true });
 
     await productDoc.save({ session });
     return productDoc;

@@ -6,7 +6,7 @@ const { isAdmin } = require('../utils/auth.js')
 
 router.get('/', getAllProducts)
 router.get('/:id', getProduct)
-router.get("/productsType", getProductsByType)
+router.get('/type', getProductsByType);
 router.post('/', isAdmin, createProduct);
 router.patch('/:id', isAdmin, updateProduct)
 router.delete('/:id', isAdmin, deleteProduct)

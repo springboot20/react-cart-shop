@@ -6,13 +6,9 @@ const model = require('../model/index.js');
 const addToCart = errorHandler(
   withTransactions(async (req, res, session) => {
     req.body.userId = req.user.userId;
-    const {
-      params: { id: productId },
-    } = req;
 
     const cartDoc = new model.CartItem(req.body);
     const savedCart = await cartDoc.save({ session });
-    await model.Product.findByIdAndUpdate(productId, { $push: { cartItems: cartDoc._id } });
 
     return savedCart;
   })
