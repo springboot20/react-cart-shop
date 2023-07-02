@@ -10,7 +10,7 @@ const userRouter = require('./routes/user');
 const productRouter = require('./routes/product');
 const orderRouter = require('./routes/order');
 const cartRouter = require('./routes/cart');
-const { HTTPError } = require('./error');
+const { handleErrors, notFound } = require('./middleware');
 
 const app = express();
 
@@ -51,21 +51,8 @@ app.get('/', (req, res, next) => {
   next();
 });
 
-app.use((req, res, next) => {
-  const err = new HTTPError(404, 'Not found');
-  next(err);
-});
-
-app.use((err, req, res, next) => {
-  res.status(err.status || 500);
-  res.send({
-    error: {
-      status: err.status || 500,
-      message: err.message,
-    },
-  });
-  next(err);
-});
+app.use(notFound);
+app.use(handleErrors);
 
 app.listen(process.env.PORT || 5000, () => {
   console.log(`Server running at http://localhost:${process.env.PORT}`);

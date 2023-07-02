@@ -1,6 +1,6 @@
 /** @format */
 
-const { errorHandler, withTransactions } = require('../error');
+const { errorHandler, withTransactions } = require('../middleware');
 const model = require('../model/index.js');
 
 const createProduct = errorHandler(
