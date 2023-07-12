@@ -1,42 +1,34 @@
 /** @format */
 
-const { HTTPError } = require('../middleware/index.js');
-const jwt = require('jsonwebtoken');
+const customErrors = require('../middleware/customErrors.js');
+const { isValidToken, tokenResponse } = require('../utils/jwt.js');
+const model = require('../model/index');
 
-const verifyToken = (req, res, next) => {
-  const accessToken = req.headers?.authorization.split(' ')[1];
+const authentication = async (req, res, next) => {
+  const { accessToken, refreshToken } = req.signedCookies;
+  try {
+    if (accessToken) {
+      const payload = isValidToken(accessToken);
+      req.user = payload.user;
+      return next();
+    }
+    const payload = isValidToken(refreshToken);
 
-  if (!accessToken) {
-    throw new HTTPError(401, 'Unauthorized: access token missing');
-  }
+    const existingToken = await model.Token.findOne({
+      user: payload.user.userId,
+      refreshToken: payload.refreshToken,
+    });
 
-  jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (error, userId) => {
-    if (error) return next(new HTTPError(403, 'Token is not valid'));
-    req.user = userId;
-    console.log(req.user);
-    res.setHeader('Authorization', `Bearer ${accessToken}`);
+    if (!existingToken || !existingToken?.isValid) {
+      throw new customErrors.UnAuthenticated('Authentication invalid');
+    }
+
+    tokenResponse({ res, user: payload.user, refreshToken: existingToken?.refreshToken });
+    req.user = payload.user;
     next();
-  });
+  } catch (error) {
+    throw new customErrors.UnAuthenticated('Authentication invalid');
+  }
 };
 
-const auth = (req, res, next) => {
-  verifyToken(req, res, next, () => {
-    if (req.user.id === req.params.id || req.user.isAdmin) {
-      next();
-    } else {
-      return next(new HTTPError(403, 'You are not authorized!'));
-    }
-  });
-};
-
-const isAdmin = (req, res, next) => {
-  verifyToken(req, res, next, () => {
-    if (req.user.isAdmin) {
-      next();
-    } else {
-      return next(new HTTPError(403, 'You are not authorized!'));
-    }
-  });
-};
-
-module.exports = { auth, isAdmin };
+module.exports = authentication;

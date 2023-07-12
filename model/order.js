@@ -1,49 +1,48 @@
 /** @format */
 
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
+
+const SingleOrderItemSchema = Schema({
+  name: { type: String, required: true },
+  imageSrc: { type: String, required: true },
+  price: { type: Number, required: true },
+  amount: { type: Number, required: true },
+  productId: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Product',
+    required: true,
+  },
+});
 
 const orderSchema = new Schema(
   {
-    id: {
-      type: mongoose.Types.ObjectId,
-    },
-    checkBy: {
+    userId: {
       type: Schema.Types.ObjectId,
       ref: 'User',
     },
-    firstName: {
-      type: String,
-      require: true,
+    tax: {
+      type: Number,
+      required: true,
     },
-    lastName: {
-      type: String,
-      require: true,
+    shippingFee: {
+      type: Number,
+      required: true,
     },
-    email: {
-      type: String,
-      require: true,
-      unique: true,
+    subtotal: {
+      type: Number,
+      required: true,
     },
-    address: {
-      city: {
-        type: String,
-        require: true,
-      },
-      state: {
-        type: String,
-        require: true,
-      },
-      zipCode: {
-        type: Number,
-        require: true,
-      },
+    total: {
+      type: Number,
+      required: true,
     },
     status: {
       type: String,
-      enums: ['declined', 'pending', 'completed'],
+      enum: ['pending', 'failed', 'paid', 'delivered', 'canceled'],
       default: 'pending',
     },
+    orderItems: [SingleOrderItemSchema],
   },
   { timestamps: true }
 );

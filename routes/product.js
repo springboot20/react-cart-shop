@@ -1,14 +1,23 @@
-const express = require('express')
-const router = express.Router()
+const express = require('express');
+const router = express.Router();
+const { createProduct, getAllProducts, updateProduct, deleteProduct, getProductsByType, getProduct } = require('../controller/productController.js');
+const { checkPermission } = require('../utils/permission');
+const authentication = require('../utils/auth.js');
 
-const { createProduct, getAllProducts, updateProduct, deleteProduct, getProductsByType, getProduct } = require("../controller/product.js")
-const { isAdmin } = require('../utils/auth.js')
+/**
+ * AUTHENTICATED USER ROUTES
+ */
 
-router.get('/', getAllProducts)
-router.get('/:id', getProduct)
-router.get('/type', getProductsByType);
-router.post('/', isAdmin, createProduct);
-router.patch('/:id', isAdmin, updateProduct)
-router.delete('/:id', isAdmin, deleteProduct)
+router.route('/').get(authentication, getAllProducts);
+router.route('/:id').get(authentication, getProduct);
+router.route('/type').get(authentication, getProductsByType);
 
-module.exports = router
+/**
+ * ADMIN ROUTES
+ */
+
+router.route('/').post([authentication, checkPermission('admin')], createProduct);
+router.route('/:id').patch([authentication, checkPermission('admin')], updateProduct);
+router.route('/:id').delete([authentication, checkPermission('admin')], deleteProduct);
+
+module.exports = router;

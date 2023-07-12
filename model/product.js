@@ -6,38 +6,57 @@ const { Schema, model } = mongoose;
 const productSchema = new Schema(
   {
     userId: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-      require: true,
-    },
-    id: {
       type: mongoose.Types.ObjectId,
+      ref: 'User',
+      required: true,
     },
-    imageUrl: {
+    name: {
       type: String,
-      require: true,
+      required: [true, 'Please provide product name'],
+      trim: true,
     },
-    priceTag: {
+    price: {
       type: Number,
-      require: true,
-    },
-    productName: {
-      type: String,
-      require: true,
+      require: [true, 'Please provide product price'],
+      default: 0,
     },
     description: {
       type: String,
-      require: true,
+      required: [true, 'Please provide product description'],
+      maxlength: [1000, 'Description can not be more than 1000 characters'],
     },
-    productType: {
+    imageSrc: {
       type: String,
-      enum: ['trouser', 'shirt', 'watch', 'laptop', 'sun glass', 'snickers', 'underwear'],
-      default: 'shirt',
     },
-    ratings: {
+    featured: {
+      type: Boolean,
+      default: false,
+    },
+    freeShipping: {
+      type: Boolean,
+      default: false,
+    },
+    categories: {
+      type: String,
+      required: [true, 'Please provide product category'],
+      enum: ['shirt', 'trouser', 'watch'],
+    },
+    size: {
+      type: String,
+      enum: ['md', 'lg', 'xl', 'xxl'],
+      default: 'md',
+    },
+    color: {
+      type: String,
+      default: ['#222'],
+    },
+    averageRating: {
       type: Number,
-      min: 0,
-      max: 5,
+      default: 0,
+    },
+    numOfReviews: {
+      type: Number,
+      default: 0,
     },
   },
   { timestamps: true }

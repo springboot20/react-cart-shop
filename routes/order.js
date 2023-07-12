@@ -1,11 +1,16 @@
-const router = require("express").Router()
-const { makeOrder, getOrders, updateOrder, deleteOrder, getOrder } = require('../controller/order')
-const { auth } = require("../utils/auth")
+const router = require('express').Router();
+const { makeOrder, getOrders, updateOrder, getCurrentUserOrder, getOrder } = require('../controller/orderController');
+const {checkPermission} = require('../utils/permission');
+const authentication = require('../utils/auth.js');
 
-router.get("/", getOrders)
-router.get("/:id", getOrder)
-router.post("/", auth, makeOrder)
-router.patch("/:id", auth, updateOrder)
-router.delete("/:id", auth, deleteOrder)
+router.route('/:userId').get(authentication, getOrder);
 
-module.exports = router
+/**
+ * ADMIN ROUTES
+ */
+router.route('/').get([authentication, checkPermission('admin')], getOrders);
+router.route('/').post([authentication, checkPermission('admin')], makeOrder);
+router.route('/:id').patch([authentication, checkPermission('admin')], updateOrder);
+router.route('/:id').get(authentication, getCurrentUserOrder);
+
+module.exports = router;
