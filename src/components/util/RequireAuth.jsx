@@ -3,16 +3,14 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router';
 import { useAuth } from './AuthContext';
-import { useUser } from '../context/user/UserContext';
 
 const RequireAuth = ({ children }) => {
   const auth = useAuth();
-  const { isLoggedIn } = useUser();
   const location = useLocation();
-
-  if (!auth?.auth || isLoggedIn) {
-    console.log(isLoggedIn);
-    return <Navigate to='/signin' state={{ path: location.pathname }} replace />;
+  if (!auth?.auth) {
+    return (
+      <Navigate to='/auth/signin' state={{ path: location.pathname }} replace />
+    );
   }
 
   return children;

@@ -1,69 +1,82 @@
 /** @format */
 
-import React, { useContext, createContext, useState } from 'react';
+import React, { useContext, createContext, useReducer } from 'react';
 import { Axios } from '../Api/Axios';
+import auth_reducer from '../reducers/auth_reducer';
 import jwt_decode from 'jwt-decode';
+import { SIGNUP, SIGNIN, LOGOUT, SIGNIN_ERROR, SIGNUP_ERROR, LOGOUT_ERROR } from '../actions/actions';
 
-const AuthContext = createContext({
-  auth: {},
-  token: null,
+const AuthContext = createContext({});
+
+function getLocalUser() {
+  return localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
+}
+function token() {
+  return localStorage.getItem('tokens') ? JSON.parse(localStorage.getItem('tokens')) : null;
+}
+function auth() {
+  return localStorage.getItem('accessToken') ? jwt_decode(localStorage.getItem('accessToken')) : null;
+}
+
+const initialState = {
   isLoggedIn: false,
-  signUpError: null,
-  signInError: null,
-  signUp: async (newUser) => {},
-  signIn: async (email, password) => {},
-  logOut: async () => {},
-});
+  user: getLocalUser(),
+  auth: auth(),
+  tokens: token(),
+  signupMsg: '',
+  signinMsg: '',
+  signupErrMsg: '',
+  signinErrMsg: '',
+  logoutErrMsg: '',
+  logoutMsg: '',
+};
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(() => (localStorage.getItem('tokens') ? JSON.parse(localStorage.getItem('tokens')) : null));
-  const [auth, setAuth] = useState(localStorage.getItem('tokens') ? jwt_decode(localStorage.getItem('tokens')) : null);
-  const [signUpError, setSignUpError] = useState('');
-  const [signInError, setSignInError] = useState('');
-
+  const [state, dispatch] = useReducer(auth_reducer, initialState);
   const signUp = async (newUser) => {
     try {
-      const response = await Axios.post('/users/signup', newUser);
-      return response.data;
+      const response = await Axios.post('/users/auth/signup', newUser);
+      dispatch({ type: SIGNUP, payload: response.data });
     } catch (error) {
-      setSignUpError(error.message);
+      dispatch({ type: SIGNUP_ERROR, payload: error.response.data });
     }
   };
-
   const signIn = async (email, password) => {
     try {
-      const response = await Axios.post('/users/signin', {
+      const response = await Axios.post('/users/auth/signin', {
         email,
         password,
       });
+      dispatch({ type: SIGNIN, payload: response.data });
 
-      setAuth(response.data.accessToken);
-      setToken(response.data);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      localStorage.setItem('tokens', JSON.stringify(response.data.tokens));
+      localStorage.setItem('accessToken', JSON.stringify(response.data.tokens.accessToken));
 
-      localStorage.setItem('tokens', JSON.stringify(response.data));
+      return response;
     } catch (error) {
-      if (error) {
-        setSignInError(error.message);
-      }
+      dispatch({ type: SIGNIN_ERROR, payload: error.response.data });
     }
   };
 
   const logOut = async () => {
     try {
-      const response = await Axios.post('/users/auth/logout', { refreshToken: token?.refreshToken });
-      setToken(null);
-      setAuth(null);
+      const response = await Axios.post('/users/auth/logout', null);
+      dispatch({ type: LOGOUT, payload: response.data });
 
-      localStorage.clear();
-      return response.data;
+      localStorage.removeItem('user');
+      localStorage.removeItem('tokens');
+      localStorage.removeItem('accessToken');
     } catch (error) {
-      if (error) {
-        console.log(error.message);
-      }
+      dispatch({ type: LOGOUT_ERROR, payload: error.response });
     }
   };
 
-  return <AuthContext.Provider value={{ auth, token, signInError, signUpError, signUp, signIn, logOut }}>{children}</AuthContext.Provider>;
+  console.log(state.isLoggedIn);
+  console.log(state.user);
+  console.log(state.auth);
+
+  return <AuthContext.Provider value={{ ...state, signUp, signIn, logOut }}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {

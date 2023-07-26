@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-[#ecf0f3] relative;
+    @apply bg-[#ecf0f3] dark:bg-gray-900 relative;
   }
 
   img {

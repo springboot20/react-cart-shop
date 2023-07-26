@@ -9,23 +9,30 @@
 import React from 'react';
 import IconType from '../icon/IconType';
 import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { formatPrice } from './CardList';
 import Button from '../icon/Button';
+import { formatPrice } from '../../helper/formatPrice';
 
 const CartCard = ({ cartItems }) => {
+  // const handleDelete = async () => {};
   return (
     // eslint-disable-next-line jsx-a11y/no-redundant-roles
     <ul role='list' className='-my-6 divide-y divide-gray-200'>
       {cartItems.map(({ productName, quantity, price, imageUrl, _id }) => (
         <li key={_id} className='flex py-6'>
           <div className='h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200'>
-            <img src={imageUrl} alt={''} className='h-full w-full object-cover object-center' />
+            <img
+              src={imageUrl}
+              alt={''}
+              className='h-full w-full object-cover object-center'
+            />
           </div>
 
           <div className='ml-4 flex flex-1 flex-col'>
             <div>
               <div className='flex justify-between  font-medium text-gray-900'>
-                <h3 className='text-gray-800 font-semibold text-xl'>{productName}</h3>
+                <h3 className='text-gray-800 font-semibold text-xl'>
+                  {productName}
+                </h3>
                 <p className='ml-4 text-xl'>{formatPrice(price)}</p>
               </div>
             </div>
@@ -33,10 +40,14 @@ const CartCard = ({ cartItems }) => {
               <p className='text-gray-500'>Qty {quantity}</p>
 
               <div className='flex space-x-4 items-center'>
-                <Button type='button' className='font-medium text-red-600 hover:text-red-500'>
+                <Button
+                  type='button'
+                  className='font-medium text-red-600 hover:text-red-500'>
                   <IconType iconType={faTrashAlt} className='h-6' />
                 </Button>
-                <Button type='button' className='font-medium text-indigo-600 hover:text-indigo-500'>
+                <Button
+                  type='button'
+                  className='font-medium text-indigo-600 hover:text-indigo-500'>
                   <IconType iconType={faEdit} className='h-6' />
                 </Button>
               </div>

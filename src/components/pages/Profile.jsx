@@ -9,7 +9,7 @@ const Profile = () => {
   return (
     <>
       <MainNav />
-      <section className='mt-24'>
+      <section className='mt-24 flex flex-col gap-32'>
         <SideNav />
         <ProfileForm />
       </section>

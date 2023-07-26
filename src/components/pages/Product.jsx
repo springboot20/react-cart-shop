@@ -1,52 +1,30 @@
 /** @format */
 
-import React, { Fragment, useEffect, useState } from 'react';
-import MainNav from '../components/Navbar/MainNav';
+import React, { Fragment, useEffect } from 'react';
 import ProductCard from '../components/CartCard/ProductCard';
-import { Axios } from '../Api/Axios';
-import { useAuth } from '../util/AuthContext';
-import { useLocation } from 'react-router-dom';
-import Footer from '../components/footer/Footer';
+import { useParams } from 'react-router-dom';
+import useProduct from '../context/product/ProductContext';
+import { Spinner } from '@material-tailwind/react';
 
 const Product = () => {
-  const { token } = useAuth();
-  const location = useLocation();
-  const [product, setProduct] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const id = location.pathname.split('/')[2];
+  const { product, product_isLoading, fetchSingleProduct } = useProduct();
+  const { id } = useParams();
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      setIsLoading(true);
-      try {
-        if (!id) {
-          setError('Invalid product ID');
-          setIsLoading(false);
-          return;
-        } else {
-          const response = await Axios.get(`/products/${id}`, {
-            headers: { Authorization: `Bearer ${token?.accessToken}` },
-          });
-          setProduct(response.data);
-        }
-      } catch (error) {
-        setError(error);
-      }
-      setIsLoading(false);
-    };
-    fetchProduct();
-  }, [token?.accessToken, id]);
+    fetchSingleProduct(`/products/${id}`);
+  });
 
   return (
     <Fragment>
-      <MainNav />
-      <section id='product' className='mx-auto mt-32 px-12 md:max-w-7xl md:px-8'>
-        <div className='md:grid md:grid-cols-7 md:gap-x-8 md:gap-y-10 xl:gap-x-16 mb-48' id='container'>
-          {isLoading ? <p className='text-xl font-semibold text-gray-800'>Loading....</p> : <ProductCard product={product} error={error} />}
-        </div>
+      <section
+        id='product'
+        className='mx-auto mt-32 min-h-[calc(100%-8rem)] max-w-[105rem] px-12 grid lg:grid-cols-2 relative mb-5 gap-16 py-24'>
+        {product_isLoading ? (
+          <Spinner width={60} height={60} className='absolute left-[50%] top-[50%] translate-[-50%]' />
+        ) : (
+          <ProductCard product={product} loading={product_isLoading} />
+        )}
       </section>
-      <Footer />
     </Fragment>
   );
 };

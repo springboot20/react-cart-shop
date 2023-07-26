@@ -2,25 +2,23 @@
 
 import React, { Fragment } from 'react';
 import CardList from './CardList';
+import { Spinner } from '@material-tailwind/react';
 
 const Card = ({ isLoading, products }) => {
   return (
     <Fragment>
-      <section id='products' className='mt-20 mb-48'>
-        <div className='mx-auto max-w-4xl px-4 py-8 sm:px-3 sm:py-18 md:max-w-6xl lg:max-w-[86.25rem] xl:max-w-[92.5rem] 2xl:max-w-[104.5rem]' id='container'>
-          {isLoading ? (
-              <p className='text-xl font-semibold text-gray-800'>Loading.....</p>
-          ) : (
-            <div className='product-container mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 xl:gap-x-8'>
-              {products.map(({ _id, ...rest }) => (
-                <CardList key={_id} _id={_id} {...rest} />
-              ))}
-            </div>
-          )}
-        </div>
+      <section
+        id='products'
+        className='mx-auto min-h-[calc(100%-8rem)] max-w-[105rem] grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8 relative sm:px-8 gap-16 py-32'>
+        {isLoading ? (
+          <Spinner width={60} height={60} className='absolute left-[50%] top-[50%] translate-[-50%]' />
+        ) : (
+          products.map(({ _id, ...rest }) => <CardList key={_id} _id={_id} {...rest} />)
+        )}
       </section>
     </Fragment>
   );
 };
 
 export default Card;
+// <div className='py-10 mt-24 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8'>
