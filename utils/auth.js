@@ -1,11 +1,29 @@
 /** @format */
 
-const customErrors = require('../middleware/customErrors.js');
-const { isValidToken, tokenResponse } = require('../utils/jwt.js');
+const { isValidToken } = require('../utils/jwt.js');
 const model = require('../model/index');
+const { tokenResponse } = require('../utils/jwt');
+const { StatusCodes } = require('http-status-codes');
 
-const authentication = async (req, res, next) => {
-  const { accessToken, refreshToken } = req.signedCookies;
+const authenticate = async (req, res, next) => {
+  let authHeader = req.headers?.authorization;
+  let refreshHeader = req.headers['x-refresh'];
+
+  if (!authHeader || !authHeader.startsWith('Bearer')) {
+    return res
+      .status(StatusCodes.UNAUTHORIZED)
+      .json({ message: 'Authentication Invalid' });
+  }
+
+  if (!refreshHeader || !refreshHeader.startsWith('Bearer')) {
+    return res
+      .status(StatusCodes.UNAUTHORIZED)
+      .json({ message: 'Authentication Invalid' });
+  }
+
+  let accessToken = authHeader.split(' ')[1];
+  let refreshToken = refreshHeader.split(' ')[1];
+
   try {
     if (accessToken) {
       const payload = isValidToken(accessToken);
@@ -18,17 +36,25 @@ const authentication = async (req, res, next) => {
       user: payload.user.userId,
       refreshToken: payload.refreshToken,
     });
-
+    console.log(existingToken);
     if (!existingToken || !existingToken?.isValid) {
-      throw new customErrors.UnAuthenticated('Authentication invalid');
+      return res
+        .status(StatusCodes.UNAUTHORIZED)
+        .json({ message: 'Authentication Invalid' });
     }
 
-    tokenResponse({ res, user: payload.user, refreshToken: existingToken?.refreshToken });
+    tokenResponse({
+      user: payload.user,
+      refreshToken: existingToken.refreshToken,
+    });
+
     req.user = payload.user;
     next();
   } catch (error) {
-    throw new customErrors.UnAuthenticated('Authentication invalid');
+    return res
+      .status(StatusCodes.UNAUTHORIZED)
+      .json({ message: 'Authentication Invalid' });
   }
 };
 
-module.exports = authentication;
+module.exports = authenticate;

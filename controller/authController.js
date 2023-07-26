@@ -1,21 +1,18 @@
-const customErrors = require('../middleware/customErrors');
 const withTransactions = require('../middleware/mongooseTransaction');
 const model = require('../model/index');
-const bcrypt = require('bcryptjs');
 const createTokenUser = require('../utils/tokenUser');
 const { tokenResponse } = require('../utils/jwt');
 const crypto = require('crypto');
 const { StatusCodes } = require('http-status-codes');
 
-async function comparePasswords(enteredPassword, docPassword) {
-  return await bcrypt.compare(enteredPassword, docPassword);
-}
-
 const signUp = withTransactions(async (req, res, session) => {
   const { email, ...rest } = req.body;
   try {
     const user = await model.User.findOne({ email });
-    if (user) throw new customErrors.BadRequest('User already exists');
+    if (user)
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: 'User already exists' });
 
     const isFirstAccount = (await model.User.countDocuments({})) === 0;
     const role = isFirstAccount ? 'admin' : 'user';
@@ -26,9 +23,11 @@ const signUp = withTransactions(async (req, res, session) => {
       role,
     });
     await userDocument.save({ session });
-    res.status(StatusCodes.CREATED).json({ message: 'You have successfully created an account' });
+    return res
+      .status(StatusCodes.CREATED)
+      .json({ message: 'You have successfully created an account' });
   } catch (error) {
-    console.log(error);
+    return res.status(StatusCodes.CREATED).json({ message: error.message });
   }
 });
 
@@ -36,11 +35,23 @@ const signIn = withTransactions(async (req, res, session) => {
   const { email, password } = req.body;
   const user = await model.User.findOne({ email });
 
-  if (!email || !password) throw new customErrors.BadRequest('Please provide email and password');
+  if (!email || !password) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ message: 'Please provide email and password' });
+  }
 
-  if (!user) throw new customErrors.UnAuthenticated('User do not exist!!');
+  if (!user) {
+    return res
+      .status(StatusCodes.UNAUTHORIZED)
+      .json({ message: 'User do not exist!!' });
+  }
 
-  if (!(await comparePasswords(password, user.password))) throw new customErrors.UnAuthenticated('Invalid password, try again!!');
+  if (!(await user.comparePasswords(password))) {
+    return res
+      .status(StatusCodes.UNAUTHORIZED)
+      .json({ message: 'Invalid password, try again!!!' });
+  }
 
   const tokenUser = createTokenUser(user);
   let refreshToken = '';
@@ -51,13 +62,21 @@ const signIn = withTransactions(async (req, res, session) => {
     const { isValid } = existingToken;
 
     if (!isValid) {
-      throw new customErrors.UnAuthenticated('Invalid credentials');
+      return res
+        .status(StatusCodes.UNAUTHORIZED)
+        .json({ message: 'Invalid credentials' });
     }
 
     refreshToken = existingToken.refreshToken;
 
-    tokenResponse({ res, user: tokenUser, refreshToken });
-    res.status(StatusCodes.OK).json({ user: tokenUser });
+    let tokens = tokenResponse({ user: tokenUser, refreshToken });
+    res
+      .status(StatusCodes.OK)
+      .json({
+        user: tokenUser,
+        message: 'you have successfully signed in',
+        tokens,
+      });
     return;
   }
 
@@ -69,23 +88,19 @@ const signIn = withTransactions(async (req, res, session) => {
   const tokenDoc = await model.Token(userToken);
   await tokenDoc.save({ session });
 
-  tokenResponse({ res, user: tokenUser, refreshToken });
-  res.status(StatusCodes.OK).json({ tokenUser });
+  const tokens = tokenResponse({ user: tokenUser, refreshToken });
+  res
+    .status(StatusCodes.OK)
+    .json({
+      user: tokenUser,
+      message: 'you have successfully signed in',
+      tokens,
+    });
 });
 
 const logOut = withTransactions(async (req, res, session) => {
-  await model.RefreshToken.deleteOne({ user: req.user.userId }, { session });
-
-  res.cookie('accessToken', 'logout', {
-    httpOnly: true,
-    expires: new Date().now(),
-  });
-
-  res.cookie('refreshToken', 'logout', {
-    httpOnly: true,
-    expires: new Date().now(),
-  });
-  res.status(StatusCodes.OK).json({ message: 'Logged out successfully' });
+  await model.Token.findOneAndDelete({ user: req.user.userId }, { session });
+  res.status(StatusCodes.OK).json({ message: 'user logged out successfully' });
 });
 
 module.exports = {

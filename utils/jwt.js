@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
-const customErrors = require('../middleware/customErrors');
+const { StatusCodes } = require('http-status-codes');
 
-const createToken = ({ payload }) => {
-  return jwt.sign(payload, process.env.JWT_SECRET);
+const createToken = ({ payload, expiresIn }) => {
+  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn });
 };
 
 const isValidToken = (token) => {
@@ -10,35 +10,21 @@ const isValidToken = (token) => {
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     return decodedToken;
   } catch (error) {
-    throw new customErrors.BadRequest('Token verification failed');
+    res.status(StatusCodes.BAD_REQUEST).json({ message: 'Token verification failed' });
   }
 };
 
-const tokenResponse = ({ res, user, refresh }) => {
+const tokenResponse = ({ user, refresh }) => {
   const day = 24 * 60 * 60 * 1000;
-  const longerDay = 30 * 24 * 60 * 60 * 1000;
+  const longerDay = 24 * 60 * 60 * 1000;
+  const accessToken = createToken({ payload: { user }, expiresIn: `${day}ms` });
+  const refreshToken = createToken({ payload: { user, refresh }, expiresIn: `${longerDay}ms` });
 
-  const accessToken = createToken({ payload: { user } });
-
-  const refreshToken = createToken({ payload: { user, refresh } });
-
-  res.cookie('accessToken', accessToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    signed: true,
-    expires: new Date(Date.now() + day),
-  });
-
-  res.cookie('refreshToken', refreshToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    signed: true,
-    expires: new Date(Date.now() + longerDay),
-  });
+  return { accessToken, refreshToken };
 };
 
 module.exports = {
-  tokenResponse,
+  tokenResponse,                            
   isValidToken,
   createToken,
 };

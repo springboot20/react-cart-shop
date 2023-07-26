@@ -5,7 +5,7 @@ const { Schema, model } = mongoose;
 
 const productSchema = new Schema(
   {
-    userId: {
+    user: {
       type: mongoose.Types.ObjectId,
       ref: 'User',
       required: true,
