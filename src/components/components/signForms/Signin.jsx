@@ -50,7 +50,7 @@ const Signin = () => {
   });
 
   return (
-    <div className='min-h-screen flex justify-center items-center mx-auto'>
+    <div className='min-h-screen flex justify-center items-center mx-auto px-10 md:px-0'>
       <form
         onSubmit={handleSubmit}
         className='max-w-3xl w-full bg-white rounded-lg'>

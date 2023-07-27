@@ -41,7 +41,9 @@ export default function Example() {
     if (response) {
       navigate('/auth/signin', { replace: true });
       toast.success(logoutMsg.message);
+      console.log(logoutMsg.message);
     } else {
+      console.log(logoutErrMsg.message);
       toast.error(logoutErrMsg.message);
     }
   };
@@ -237,13 +239,13 @@ export default function Example() {
 
               {!auth && (
                 <>
-                  <div className='px-4 py-2 text-sm text-gray-700 dark:text-white  dark:hover:bg-violet-700 p-3 rounded-md transition-all bg-violet-800 lg:mr-6'>
+                  <div className='px-4 py-2 text-sm text-white 9dark:hover:bg-violet-700 p-3 rounded-md transition-all bg-violet-800 lg:mr-6'>
                     <Link to='/auth/signup' className='text-xl font-semibold text-center block'>
                       Sign Up
                     </Link>
                   </div>
 
-                  <div className='px-4 py-2 text-sm text-gray-700 dark:text-white  dark:hover:bg-slate-700 p-3 rounded-md transition-all bg-gray-800 lg:mr-6'>
+                  <div className='px-4 py-2 text-sm text-white dark:hover:bg-slate-700 p-3 rounded-md transition-all bg-gray-800 lg:mr-6'>
                     <Link to='/auth/signin' className='text-xl font-semibold text-center block'>
                       Sign In
                     </Link>

@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }) => {
 
   const logOut = async () => {
     try {
-      const response = await Axios.post('/users/auth/logout', null);
+      const response = await Axios.post('/users/auth/logout');
       dispatch({ type: LOGOUT, payload: response.data });
 
       localStorage.removeItem('user');

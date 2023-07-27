@@ -26,15 +26,7 @@ const Signup = () => {
 
   const navigate = useNavigate();
   const { signUp, signupMsg, signupErrMsg } = useAuth();
-  const {
-    values,
-    handleSubmit,
-    handleBlur,
-    handleChange,
-    touched,
-    errors,
-    isSubmitting,
-  } = useFormik({
+  const { values, handleSubmit, handleBlur, handleChange, touched, errors, isSubmitting } = useFormik({
     initialValues,
     validationSchema: basicSchema,
     onSubmit: async (values) => {
@@ -52,21 +44,15 @@ const Signup = () => {
     },
   });
   return (
-    <div className='flex justify-center items-center min-h-screen'>
-      <form
-        onSubmit={handleSubmit}
-        className='flex-shrink-0 max-w-3xl w-full mx-auto bg-white rounded-lg'>
+    <div className='flex justify-center items-center min-h-screen px-10 md:px-0'>
+      <form onSubmit={handleSubmit} className='flex-shrink-0 max-w-3xl w-full mx-auto bg-white rounded-lg'>
         <div className='space-y-12'>
           <div className='border-b border-gray-900/10 pb-12'>
-            <legend className='my-5 text-center font-semibold text-3xl text-violet-700'>
-              Sign Up
-            </legend>
+            <legend className='my-5 text-center font-semibold text-3xl text-violet-700'>Sign Up</legend>
             <div className='mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6'>
               <div className='col-span-full'>
                 <fieldset className='mb-2'>
-                  <label
-                    htmlFor='Username'
-                    className='block text-xl font-semibold  leading-6 text-gray-900'>
+                  <label htmlFor='Username' className='block text-xl font-semibold  leading-6 text-gray-900'>
                     Username
                   </label>
                   <div className='mt-2'>
@@ -80,25 +66,19 @@ const Signup = () => {
                       onBlur={handleBlur}
                       value={values.username}
                       className={`block w-full rounded-md border-0 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm font-semibold sm:leading-6 ${
-                        errors.username && touched.username
-                          ? 'ring-red-600 ring-[0.15rem]'
-                          : ''
+                        errors.username && touched.username ? 'ring-red-600 ring-[0.15rem]' : ''
                       }`}
                     />
                   </div>
                 </fieldset>
                 {errors.username && touched.username && (
-                  <small className='text-xl block text-red-600'>
-                    {errors.username}
-                  </small>
+                  <small className='text-xl block text-red-600'>{errors.username}</small>
                 )}
               </div>
 
               <div className='col-span-full'>
                 <fieldset className='mb-2'>
-                  <label
-                    htmlFor='email'
-                    className='block text-xl font-semibold  leading-6 text-gray-900'>
+                  <label htmlFor='email' className='block text-xl font-semibold  leading-6 text-gray-900'>
                     Email address
                   </label>
                   <div className='mt-2'>
@@ -112,25 +92,17 @@ const Signup = () => {
                       onBlur={handleBlur}
                       value={values.email}
                       className={`block w-full rounded-md border-0 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm font-semibold sm:leading-6 ${
-                        errors.email && touched.email
-                          ? 'ring-red-600 ring-[0.15rem]'
-                          : ''
+                        errors.email && touched.email ? 'ring-red-600 ring-[0.15rem]' : ''
                       }`}
                     />
                   </div>
                 </fieldset>
-                {errors.email && touched.email && (
-                  <small className='text-xl block text-red-600'>
-                    {errors.email}
-                  </small>
-                )}
+                {errors.email && touched.email && <small className='text-xl block text-red-600'>{errors.email}</small>}
               </div>
 
               <div className='col-span-full'>
                 <fieldset className='mb-2'>
-                  <label
-                    htmlFor='password'
-                    className='block text-xl font-semibold  leading-6 text-gray-900'>
+                  <label htmlFor='password' className='block text-xl font-semibold  leading-6 text-gray-900'>
                     Password
                   </label>
                   <div className='mt-2 relative'>
@@ -144,9 +116,7 @@ const Signup = () => {
                       onBlur={handleBlur}
                       value={values.password}
                       className={`block w-full rounded-md border-0 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm font-semibold sm:leading-6 ${
-                        errors.password && touched.password
-                          ? 'ring-red-600 ring-[0.15rem]'
-                          : ''
+                        errors.password && touched.password ? 'ring-red-600 ring-[0.15rem]' : ''
                       }`}
                     />
                     <IconType
@@ -158,9 +128,7 @@ const Signup = () => {
                     />
                   </div>
                   {errors.password && touched.password && (
-                    <small className='text-xl block text-red-600'>
-                      {errors.password}
-                    </small>
+                    <small className='text-xl block text-red-600'>{errors.password}</small>
                   )}
                 </fieldset>
               </div>

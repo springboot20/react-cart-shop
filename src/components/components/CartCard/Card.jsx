@@ -9,7 +9,7 @@ const Card = ({ isLoading, products }) => {
     <Fragment>
       <section
         id='products'
-        className='mx-auto min-h-[calc(100%-8rem)] max-w-[105rem] grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8 relative sm:px-8 gap-16 py-32'>
+        className='mx-auto min-h-[calc(100%-8rem)] max-w-[105rem] grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8 relative px-8 gap-16 py-32'>
         {isLoading ? (
           <Spinner width={60} height={60} className='absolute left-[50%] top-[50%] translate-[-50%]' />
         ) : (

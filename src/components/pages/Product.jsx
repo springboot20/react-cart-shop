@@ -12,7 +12,7 @@ const Product = () => {
 
   useEffect(() => {
     fetchSingleProduct(`/products/${id}`);
-  });
+  }, [id]);
 
   return (
     <Fragment>
