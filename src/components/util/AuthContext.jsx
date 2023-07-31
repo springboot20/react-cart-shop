@@ -33,7 +33,9 @@ const initialState = {
 
 function isTokenExpire(arg) {
   let currentTime = Math.floor(new Date() / 1000);
-  return arg.exp && currentTime >= arg.exp;
+  if (arg.exp) {
+    return currentTime >= arg.exp;
+  }
 }
 
 export const AuthProvider = ({ children }) => {
