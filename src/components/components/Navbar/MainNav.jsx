@@ -39,11 +39,11 @@ export default function Example() {
   const handleLogOut = async () => {
     const response = await logOut();
     if (response) {
-      navigate('/auth/signin', { replace: true });
       toast.success(logoutMsg.message);
-      console.log(logoutMsg.message);
+      window.location.reload();
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      navigate('/auth/signin', { replace: true });
     } else {
-      console.log(logoutErrMsg.message);
       toast.error(logoutErrMsg.message);
     }
   };

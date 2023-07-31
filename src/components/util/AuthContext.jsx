@@ -1,6 +1,6 @@
 /** @format */
 
-import React, { useContext, createContext, useReducer } from 'react';
+import React, { useContext, createContext, useReducer, useState, useEffect } from 'react';
 import { Axios } from '../Api/Axios';
 import auth_reducer from '../reducers/auth_reducer';
 import jwt_decode from 'jwt-decode';
@@ -31,8 +31,14 @@ const initialState = {
   logoutMsg: '',
 };
 
+function isTokenExpire(arg) {
+  let currentTime = Math.floor(new Date() / 1000);
+  return currentTime >= arg.exp;
+}
+
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(auth_reducer, initialState);
+  const [isTokenExpired, setIsTokenExpired] = useState(isTokenExpire(state.auth));
   const signUp = async (newUser) => {
     try {
       const response = await Axios.post('/users/auth/signup', newUser);
@@ -72,11 +78,25 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  useEffect(() => {
+    const checkTokenExpiration = () => {
+      if (isTokenExpire(state.auth)) {
+        setIsTokenExpired(true);
+      }
+    };
+    const intervalId = setInterval(checkTokenExpiration, 1000);
+
+    return () => clearInterval(intervalId);
+  });
+
   console.log(state.isLoggedIn);
   console.log(state.user);
   console.log(state.auth);
+  console.log(`log from line 98 : ${isTokenExpired}`);
 
-  return <AuthContext.Provider value={{ ...state, signUp, signIn, logOut }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ ...state, signUp, signIn, logOut, isTokenExpired }}>{children}</AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => {

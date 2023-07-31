@@ -2,11 +2,42 @@
 
 import React from 'react';
 import AppLayout from './components/layout/AppLayout';
+import { Route, Routes } from 'react-router-dom';
+import SignIn from './components/pages/SignIn';
+import SignUp from './components/pages/SignUp';
+import Home from './components/pages/Home';
+import Products from './components/pages/Products';
+import Product from './components/pages/Product';
+import RequireAuth from './components/util/RequireAuth';
+import Cart from './components/pages/Cart';
 
 const App = () => {
   return (
     <React.Fragment>
-      <AppLayout />
+      <Routes>
+        <Route path='/auth/signin' element={<SignIn />} />
+        <Route path='/auth/signup' element={<SignUp />} />
+        <Route path='/' element={<AppLayout />}>
+          <Route path='/' element={<Home />} />
+          <Route
+            path='products'
+            element={
+              <RequireAuth>
+                <Products />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path='products/:id'
+            element={
+              <RequireAuth>
+                <Product />
+              </RequireAuth>
+            }
+          />
+          <Route path='cart' element={<Cart />} />
+        </Route>
+      </Routes>
     </React.Fragment>
   );
 };

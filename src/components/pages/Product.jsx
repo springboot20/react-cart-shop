@@ -5,9 +5,12 @@ import ProductCard from '../components/CartCard/ProductCard';
 import { useParams } from 'react-router-dom';
 import useProduct from '../context/product/ProductContext';
 import { Spinner } from '@material-tailwind/react';
+import Modal from '../components/modal/Modal';
+import { useAuth } from '../util/AuthContext';
 
 const Product = () => {
   const { product, product_isLoading, fetchSingleProduct } = useProduct();
+  const { isTokenExpired } = useAuth();
   const { id } = useParams();
 
   useEffect(() => {
@@ -16,6 +19,7 @@ const Product = () => {
 
   return (
     <Fragment>
+      <Modal isExpired={isTokenExpired} />
       <section
         id='product'
         className='mx-auto mt-32 min-h-[calc(100%-8rem)] max-w-[105rem] px-12 grid lg:grid-cols-2 relative mb-5 gap-16 py-24'>

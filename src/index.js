@@ -3,12 +3,11 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { RouterProvider } from 'react-router-dom';
 import { ThemeProvider } from '@material-tailwind/react';
-import Routes from './components/route/Routes';
 import { AuthProvider } from './components/util/AuthContext';
 import { ModeProvider } from './components/context/theme/ThemeContext';
 import { ProductProvider } from './components/context/product/ProductContext';
+import { BrowserRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -16,11 +15,11 @@ root.render(
     <AuthProvider>
       <ModeProvider>
         <ProductProvider>
-          <RouterProvider router={Routes}>
-            <ThemeProvider>
+          <ThemeProvider>
+            <BrowserRouter>
               <App />
-            </ThemeProvider>
-          </RouterProvider>
+            </BrowserRouter>
+          </ThemeProvider>
         </ProductProvider>
       </ModeProvider>
     </AuthProvider>

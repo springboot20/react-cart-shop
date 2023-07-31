@@ -4,7 +4,6 @@ import MainNav from '../components/Navbar/MainNav';
 import Footer from '../components/footer/Footer';
 import { ToastContainer } from 'react-toastify';
 
-
 const AppLayout = () => {
   return (
     <Fragment>

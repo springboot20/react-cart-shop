@@ -6,17 +6,20 @@ import { Link } from 'react-router-dom';
 import { useCart } from '../context/product/CartContext';
 import CartCard from '../components/CartCard/CartCard';
 import CartTotal from '../components/CartCard/CartTotal';
+import Modal from '../components/modal/Modal';
+import { useAuth } from '../util/AuthContext';
 
 const Cart = () => {
   const { cartItems } = useCart();
+  const { isTokenExpired } = useAuth();
+
   return (
     <Fragment>
+      <Modal isExpired={isTokenExpired} />
       <section className='mt-32 mx-auto'>
         <div className='container mx-auto max-w-5xl px-4 py-8 sm:px-3 sm:py-18 md:max-w-6xl lg:max-w-[86.25rem] xl:max-w-[92.5rem] 2xl:max-w-[104.5rem] flex flex-col'>
           <div className='flex'>
-            <h1 className='font-bold text-4xl text-gray-800 dark:text-white leading-5'>
-              Shopping Cart
-            </h1>
+            <h1 className='font-bold text-4xl text-gray-800 dark:text-white leading-5'>Shopping Cart</h1>
           </div>
           <div className='mt-9 flex'>
             <div className='flex-1'>
