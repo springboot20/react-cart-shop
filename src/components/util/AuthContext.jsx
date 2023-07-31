@@ -32,7 +32,7 @@ const initialState = {
 };
 
 function isTokenExpire(arg) {
-  let currentTime = Math.floor(new Date() / 1000);
+  let currentTime = Math.floor(new Date().now() / 1000);
   if (arg && arg.exp) {
     return currentTime >= arg.exp;
   }
