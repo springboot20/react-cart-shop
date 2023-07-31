@@ -80,8 +80,9 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const checkTokenExpiration = () => {
-      if (state.auth) {
-        if (isTokenExpire(state.auth)) {
+      const decodedTokenPayload = auth();
+      if (decodedTokenPayload) {
+        if (isTokenExpire(decodedTokenPayload)) {
           setIsTokenExpired(true);
         }
       }
