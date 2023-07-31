@@ -9,13 +9,13 @@ import { SIGNUP, SIGNIN, LOGOUT, SIGNIN_ERROR, SIGNUP_ERROR, LOGOUT_ERROR } from
 const AuthContext = createContext({});
 
 function getLocalUser() {
-  return localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
+  return localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {};
 }
 function token() {
-  return localStorage.getItem('tokens') ? JSON.parse(localStorage.getItem('tokens')) : null;
+  return localStorage.getItem('tokens') ? JSON.parse(localStorage.getItem('tokens')) : {};
 }
 function auth() {
-  return localStorage.getItem('accessToken') ? jwt_decode(localStorage.getItem('accessToken')) : null;
+  return localStorage.getItem('accessToken') ? jwt_decode(localStorage.getItem('accessToken')) : {};
 }
 
 const initialState = {
@@ -36,6 +36,7 @@ function isTokenExpire(arg) {
   if (arg.exp) {
     return currentTime >= arg.exp;
   }
+  return false;
 }
 
 export const AuthProvider = ({ children }) => {
