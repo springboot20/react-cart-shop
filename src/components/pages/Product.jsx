@@ -22,7 +22,7 @@ const Product = () => {
       <Modal isExpired={isTokenExpired} />
       <section
         id='product'
-        className='mx-auto mt-32 min-h-[calc(100%-8rem)] max-w-[105rem] px-12 grid lg:grid-cols-2 relative mb-5 gap-16 py-24'>
+        className='mx-auto mt-32 min-h-[calc(100%-8rem)] max-w-[105rem] px-12 grid lg:grid-cols-2 relative mb-5 gap-16 py-12'>
         {product_isLoading ? (
           <Spinner width={60} height={60} className='absolute left-[50%] top-[50%] translate-[-50%]' />
         ) : (

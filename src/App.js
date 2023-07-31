@@ -10,6 +10,7 @@ import Products from './components/pages/Products';
 import Product from './components/pages/Product';
 import RequireAuth from './components/util/RequireAuth';
 import Cart from './components/pages/Cart';
+import Profile from './components/pages/Profile';
 
 const App = () => {
   return (
@@ -35,6 +36,7 @@ const App = () => {
               </RequireAuth>
             }
           />
+          <Route path='auth/profile' element={<Profile />} />
           <Route path='cart' element={<Cart />} />
         </Route>
       </Routes>
