@@ -80,8 +80,10 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const checkTokenExpiration = () => {
-      if (isTokenExpire(state.auth)) {
-        setIsTokenExpired(true);
+      if (state.auth) {
+        if (isTokenExpire(state.auth)) {
+          setIsTokenExpired(true);
+        }
       }
     };
     const intervalId = setInterval(checkTokenExpiration, 1000);
