@@ -40,7 +40,7 @@ function isTokenExpire(arg) {
 
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(auth_reducer, initialState);
-  const [isTokenExpired, setIsTokenExpired] = useState(isTokenExpire(state.auth));
+  const [isTokenExpired, setIsTokenExpired] = useState(isTokenExpire(auth()));
   const signUp = async (newUser) => {
     try {
       const response = await Axios.post('/users/auth/signup', newUser);
