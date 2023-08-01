@@ -129,6 +129,9 @@ export default function Example() {
                     setTheme={setTheme}
                     activate={activateTheme}
                     active={activeMode}
+                    className={
+                      'p-4 h-18 w-18 dark:bg-gray-700 sm:items-center ring-2 dark:ring-gray-700/50 dark:text-white text-gray-900 shadow-md rounded-md hidden sm:flex'
+                    }
                   />
                 )}
 
@@ -167,7 +170,6 @@ export default function Example() {
                           <Menu.Item>
                             {({ active }) => (
                               <NavLink
-                                to='auth/profile'
                                 className={classNames(
                                   active ? 'bg-gray-100' : '',
                                   'block px-4 py-2 text-sm text-gray-700'
@@ -211,6 +213,19 @@ export default function Example() {
           </div>
           <Disclosure.Panel className='sm:hidden'>
             <div className='space-y-3 px-2 pb-3 pt-2'>
+              {auth && (
+                <div className='sm:block'>
+                  <ModeToggler
+                    icon={<IconType iconType={activeMode ? faMoon : faSun} className='h-5' />}
+                    setTheme={setTheme}
+                    activate={activateTheme}
+                    active={activeMode}
+                    className={
+                      'p-4 h-18 w-18 dark:bg-gray-700 items-center ring-2 dark:ring-gray-700/50 dark:text-white text-gray-900 shadow-md rounded-md flex'
+                    }
+                  />
+                </div>
+              )}
               {auth &&
                 navigation.map((item) => (
                   <NavLink
@@ -222,7 +237,6 @@ export default function Example() {
                     {item.name}
                   </NavLink>
                 ))}
-
               {auth && (
                 <div className='sm:block'>
                   <NavLink
@@ -236,7 +250,6 @@ export default function Example() {
                   </NavLink>
                 </div>
               )}
-
               {!auth && (
                 <>
                   <div className='px-4 py-2 text-sm text-white 9dark:hover:bg-violet-700 p-3 rounded-md transition-all bg-violet-800 lg:mr-6'>

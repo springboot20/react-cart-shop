@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Button from '../icon/Button';
 
 const ModeToggler = (props) => {
-  const { icon, active, setTheme, activate } = props;
+  const { icon, active, setTheme, activate, className } = props;
   const toggleTheme = () => {
     if (active) {
       activate('light');
@@ -14,10 +14,7 @@ const ModeToggler = (props) => {
     }
   };
   return (
-    <Button
-      type='button'
-      className='p-4 h-18 w-18 dark:bg-gray-700 flex items-center ring-2 dark:ring-gray-700/50 dark:text-white text-gray-900 shadow-md rounded-md'
-      onClick={toggleTheme}>
+    <Button type='button' className={className} onClick={toggleTheme}>
       {icon}
     </Button>
   );
@@ -25,6 +22,7 @@ const ModeToggler = (props) => {
 
 ModeToggler.propTypes = {
   active: PropTypes.bool,
+  className: PropTypes.string,
 };
 
 export default ModeToggler;
