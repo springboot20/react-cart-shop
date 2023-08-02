@@ -16,8 +16,8 @@ const Cart = () => {
   return (
     <Fragment>
       <Modal isExpired={isTokenExpired} />
-      <section className='mt-32 mx-auto'>
-        <div className='container mx-auto max-w-5xl px-4 py-8 sm:px-3 sm:py-18 md:max-w-6xl lg:max-w-[86.25rem] xl:max-w-[92.5rem] 2xl:max-w-[104.5rem] flex flex-col'>
+      <section className='top-32 relative h-[calc(100vh-6rem)]'>
+        <div className='container h-full mx-auto max-w-5xl px-4 py-8 sm:px-3 sm:py-18 md:max-w-6xl lg:max-w-[86.25rem] xl:max-w-[92.5rem] 2xl:max-w-[104.5rem] flex flex-col'>
           <div className='flex'>
             <h1 className='font-bold text-4xl text-gray-800 dark:text-white leading-5'>Shopping Cart</h1>
           </div>

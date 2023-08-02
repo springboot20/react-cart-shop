@@ -20,14 +20,14 @@ const Product = () => {
   return (
     <Fragment>
       <Modal isExpired={isTokenExpired} />
-      <section
-        id='product'
-        className='mx-auto mt-32 min-h-[calc(100%-8rem)] max-w-[105rem] px-12 grid lg:grid-cols-2 relative mb-5 gap-16 py-12'>
-        {product_isLoading ? (
-          <Spinner width={60} height={60} className='absolute left-[50%] top-[50%] translate-[-50%]' />
-        ) : (
-          <ProductCard product={product} loading={product_isLoading} />
-        )}
+      <section id='product' className='top-24 min-h-[calc(100%-8rem)] max-w-[105rem] relative mb-5 '>
+        <div className='px-12 grid lg:grid-cols-2gap-16 py-12 mx-auto h-full'>
+          {product_isLoading ? (
+            <Spinner width={60} height={60} className='absolute left-[50%] top-[50%] translate-[-50%]' />
+          ) : (
+            <ProductCard product={product} loading={product_isLoading} />
+          )}
+        </div>
       </section>
     </Fragment>
   );
