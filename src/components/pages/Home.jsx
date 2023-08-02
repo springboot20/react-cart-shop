@@ -5,7 +5,7 @@ import Button from '../components/icon/Button';
 const Home = () => {
   return (
     <Fragment>
-      <section className='h-[60vh] lg:h-[calc(100vh-12rem)] relative top-24'>
+      <section className='h-[80vh] lg:h-[calc(100vh-12rem)] relative top-24'>
         <div className='h-full mx-auto max-w-5xl md:max-w-7xl lg:max-w-[90rem] xl:max-w-[95rem] grid grid-cols-1 sm:grid-cols-2 gap-24 place-items-center place-content-center px-6'>
           <article className='col-span-full sm:col-span-1'>
             <h1 className='text-gray-900 dark:text-white text-5xl font-extrabold mb-7'>
