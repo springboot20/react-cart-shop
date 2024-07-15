@@ -1,6 +1,4 @@
-/** @format */
-
-require('dotenv').config({ path: '../.env' });
+require('dotenv').config({ path: '.env' });
 
 const express = require('express');
 const cors = require('cors');
@@ -13,8 +11,8 @@ const path = require('path');
 const authRoutes = require('./routes/auth/auth.routes');
 
 // ERROR HANDLER
-const { errorHandler } = require('./middleware/error/error.middlewareleware');
-const notfound = require('./error/notfound');
+const { errorHandler } = require('./middleware/error/error.middleware');
+const notfound = require('./middleware/error/notfound');
 
 const app = express();
 
@@ -29,7 +27,7 @@ app.set('views', path.resolve(`${__dirname}/views`));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use('/api/v1/users', authRoutes.router);
+app.use('/api/v1/users', authRoutes);
 
 app.use(
   rateLimit({

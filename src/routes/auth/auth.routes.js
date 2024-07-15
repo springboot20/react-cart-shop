@@ -68,4 +68,4 @@ router
     userControllers.updateCurrentUser
   );
 
-module.exports = { router };
+module.exports = router;

@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { StatusCodes } = require('http-status-codes');
-const { ApiResponse } = require('./utils/apiResponse');
+const { ApiResponse } = require('./apiResponse');
 
 const getFileLocalPath = (filename) => `${__dirname}/images/${filename}`;
 
@@ -27,4 +27,31 @@ const removeLocalFilePath = (localPath) => {
   });
 };
 
-module.exports = { getStaticFilePath, getFileLocalPath, removeLocalFilePath };
+/**
+ *
+ * @param {{page: number; limit: number; customLabels: mongoose.CustomLabels;}} options
+ * @returns {mongoose.PaginateOptions}
+ */
+ const getMongoosePaginationOptions = ({
+  page = 1,
+  limit = 10,
+  customLabels,
+}) => {
+  return {
+    page: Math.max(page, 1),
+    limit: Math.max(limit, 1),
+    pagination: true,
+    customLabels: {
+      pagingCounter: "serialNumberStartFrom",
+      ...customLabels,
+    },
+  };
+};
+
+
+module.exports = {
+  getStaticFilePath,
+  getFileLocalPath,
+  removeLocalFilePath,
+  getMongoosePaginationOptions,
+};

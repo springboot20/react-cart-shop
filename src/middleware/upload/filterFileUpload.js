@@ -21,4 +21,4 @@
     }
   };
 };
-module.exports = filterFile
+module.exports = {filterFile}

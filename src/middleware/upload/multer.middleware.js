@@ -1,6 +1,6 @@
-import multer from 'multer';
-import { filterFile } from './filterFileUpload';
-import path from 'path';
+const multer = require('multer');
+const { filterFile } = require('./filterFileUpload');
+const path = require('path');
 
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
@@ -9,8 +9,7 @@ const storage = multer.diskStorage({
   filename: (req, file, callback) => {
     const fileExt = path.extname();
     const uniqueFileId = Math.random().toString(36).slice(2, 6);
-const filename = file.originalname.split('.');
-
+    const filename = file.originalname.split('.');
   },
 });
 

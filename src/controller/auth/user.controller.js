@@ -2,7 +2,7 @@ const { UserModel } = require('../../model/index');
 const { StatusCodes } = require('http-status-codes');
 const { asyncHandler } = require('../../utils/asyncHandler');
 const { ApiResponse } = require('../../utils/apiResponse');
-const { getStaticFilePath, getFileLocalPath } = require('../../helper');
+const { getStaticFilePath, getFileLocalPath } = require('../../utils/helper');
 const CustomErrors = require('../../utils/customErrors');
 const mongoose = require('mongoose');
 

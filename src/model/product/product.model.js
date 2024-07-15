@@ -29,7 +29,7 @@ const ProductSchema = new Schema(
         localPath: String,
       },
     },
-    subImgs: {
+    subImages: {
       type: [
         {
           url: String,
